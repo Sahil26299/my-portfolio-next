@@ -1,0 +1,39 @@
+.glichBox1 {
+  animation: slide1 10s infinite normal;
+  animation-delay: 4000ms;
+}
+.glichBox2 {
+  animation: slide2 10s infinite linear;
+}
+@keyframes slide1 {
+  from,
+  to {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(15px);
+  }
+}
+@keyframes slide2 {
+  from,
+  to {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(12px);
+  }
+}
+
+.chatMessageInAnimation {
+  animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
