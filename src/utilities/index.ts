@@ -5,7 +5,9 @@ import {
   ArrayOfStringType,
   GenericObjectInterface,
 } from "./commonInterface/commonInterfaces";
+
 export { poppins };
+
 export type {
   formSubmitEventType,
   inputChangeEventType,

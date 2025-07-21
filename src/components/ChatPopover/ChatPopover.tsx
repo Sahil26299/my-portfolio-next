@@ -19,7 +19,7 @@ import {
   GenericObjectInterface,
   inputChangeEventType,
 } from "@/src/utilities";
-import { openSans } from "@/src/utilities/themes/font";
+import { openSans, poppins } from "@/src/utilities/themes/font";
 
 interface chatRecords {
   user: "user" | "bot";
@@ -161,7 +161,7 @@ const ChatPopover = () => {
         <TooltipTrigger asChild>
           <PopoverTrigger className="absolute bottom-10 right-10 cursor-pointer">
             <div className="border-b border-r border-blue pt-px pl-px relative">
-              <Bot size={56} className="border border-purple" />
+              <Bot size={56} className="border border-purple text-content" />
 
               {!openChatPopover && (
                 <div
@@ -176,7 +176,7 @@ const ChatPopover = () => {
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent className={`mr-10 ${openSans.className}`}>
+        <TooltipContent className={`mr-10 ${poppins.className}`}>
           <p className="font-medium">In a hurry? Let me help.</p>
         </TooltipContent>
       </Tooltip>
