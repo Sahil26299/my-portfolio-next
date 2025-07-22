@@ -15,12 +15,12 @@ export default function page() {
 
   return (
     <ThemeProvider>
-      <SidebarProvider className="bg-background" open={openSideBar}>
+      <SidebarProvider className="bg-bg_primary" open={openSideBar}>
         <SidebarComponent
           handleToggleSidebar={handleToggleSidebar}
           sidebarState={openSideBar}
         />
-        <main className="w-full bg-background">
+        <main className="w-full ">
           <Navbar />
           <ChatPopover />
         </main>

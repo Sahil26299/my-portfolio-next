@@ -87,10 +87,10 @@ export default function Navbar() {
     >
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-content bg-background hover:bg-content hover:text-background" >Home</NavigationMenuTrigger>
+          <NavigationMenuTrigger className="text-content bg-bg_primary hover:bg-bg_secondary" >Home</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-              <li className="row-span-3">
+            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0">
+              <li className="row-span-3 border-r border-light_grey dark:border-dark_grey">
                 <NavigationMenuLink asChild>
                   <a
                     className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
