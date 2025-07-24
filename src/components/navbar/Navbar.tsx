@@ -5,6 +5,7 @@ import {
   CircleCheckIcon,
   CircleHelpIcon,
   CircleIcon,
+  Download,
   Moon,
   Sun,
 } from "lucide-react";
@@ -19,6 +20,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import Image from "next/image";
+import { profilePic } from "@/public";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -83,41 +86,54 @@ export default function Navbar() {
   return (
     <NavigationMenu
       viewport={false}
-      className="w-full max-w-full justify-between h-[45px] px-4"
+      className="w-full max-w-full justify-between h-[50px] px-4 shadow in-dark:shadow-none"
     >
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-content bg-bg_primary hover:bg-bg_secondary" >Home</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0">
-              <li className="row-span-3 border-r border-light_grey dark:border-dark_grey">
+          <NavigationMenuTrigger className="text-content bg-bg_primary hover:bg-bg_secondary text-md-1">
+            Profile
+          </NavigationMenuTrigger>
+          <NavigationMenuContent className="bg-bg_secondary border-dark_grey/10 dark:border-red">
+            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0 ">
+              <li className="row-span-3 border-r border-dark_grey/10 ">
                 <NavigationMenuLink asChild>
-                  <a
+                  <div
                     className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
-                    href="/"
                   >
-                    <div className="mt-4 mb-2 text-lg font-medium">
-                      shadcn/ui
-                    </div>
-                    <p className="text-muted-foreground text-sm leading-tight">
-                      Beautifully designed components built with Tailwind CSS.
+                    <section className="mx-2 text-md font-medium flex flex-col gap-2 items-center">
+                      <div className="h-24 w-24 rounded-full overflow-hidden">
+                        <Image
+                          src={profilePic}
+                          alt="Profile pic"
+                          className="h-full object-contain"
+                        />
+                      </div>
+                      Sahil Lokhande
+                    </section>
+                    <p className="text-muted-foreground text-sm leading-tight self-center flex items-center gap-2">
+                      <span>Software developer</span>• 
+                      <Button size="icon" className="h-5 w-5">
+                        <Download size={16} />
+                      </Button>
                     </p>
-                  </a>
+                  </div>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Introduction">
-                Re-usable components built using Radix UI and Tailwind CSS.
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                How to install dependencies and structure your app.
-              </ListItem>
-              <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem>
+              <li className="text-sm pl-2" title="Introduction">
+                <strong>Introduction</strong><br />
+                Frontend Software Engineer located in Pune, India 📌
+              </li>
+              <li className="text-sm pl-2" title="Technologies">
+                <strong>Technologies</strong><br />
+                HTML | CSS | JS | TS | React Js | Next Js | React Native
+              </li>
+              <li className="text-sm pl-2" title="Vision">
+                <strong>Vision</strong><br />
+                Full-stack + AI developer | Leverage LLMs in frontend to build AI agents and deliver great user experiences.
+              </li>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        
       </NavigationMenuList>
       <ThemeToggleButton />
     </NavigationMenu>

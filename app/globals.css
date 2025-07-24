@@ -4,8 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --theme: #f59e0b;
   --bg_primary: #f1f1f1;
-  --bg_secondary: #ffffff;
+  --bg_secondary: #f3f4f6;
   --content: #1d1d1d;
   --black: #000;
   --white: #fff;
@@ -33,6 +34,7 @@
   --text-sm: 12px;
 
   /* colors */
+  --color-theme: var(--theme);
   --color-bg_primary: var(--bg_primary);
   --color-bg_secondary: var(--bg_secondary);
   --color-content: var(--content);
@@ -60,11 +62,11 @@ body {
   /* font-family: Arial, Helvetica, sans-serif; */
 }
 
-.dark {
+/* .dark {
   --bg_primary: #1d1d1d;
   --bg_secondary: #141414;
   --content: #f1f1f1;
-}
+} */
 
 [data-theme="dark"] {
   --bg_primary: #1d1d1d;

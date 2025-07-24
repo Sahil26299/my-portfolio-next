@@ -176,7 +176,7 @@ const ChatPopover = () => {
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent className={`mr-10 ${poppins.className}`}>
+        <TooltipContent className={`mr-10 ${poppins.className}`} >
           <p className="font-medium">In a hurry? Let me help.</p>
         </TooltipContent>
       </Tooltip>

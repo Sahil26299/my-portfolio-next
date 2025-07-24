@@ -17,8 +17,8 @@ interface SidebarProps {
 
 function SidebarComponent({ handleToggleSidebar, sidebarState }: SidebarProps) {
   return (
-    <Sidebar collapsible="icon" className="border-none bg-bg_secondary">
-      <SidebarHeader className="h-[45px] py-0 flex flex-row items-center border-none">
+    <Sidebar collapsible="icon" className="border-none bg-bg_secondary shadow">
+      <SidebarHeader className="h-[50px] py-0 flex flex-row items-center border-none">
         <section className="flex items-center w-full justify-between">
           <Button
             size={"icon"}
