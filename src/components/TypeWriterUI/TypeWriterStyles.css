@@ -1,0 +1,15 @@
+.cursorAnimation {
+    animation: blink-caret .75s step-end infinite
+}
+
+@keyframes blink-caret {
+    from,
+    to {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+    
+}

@@ -4,14 +4,21 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --theme: #f59e0b;
-  --bg_primary: #f1f1f1;
-  --bg_secondary: #f3f4f6;
+  /* Light theme colors */
+  --bg-primary: #f1f1f1;
+  --bg-secondary: #f3f4f6;
   --content: #1d1d1d;
+  /* Dark theme colors */
+  --bg-primary-dark: #1d1d1d;
+  --bg-secondary-dark: #141414;
+  --content-dark: #f1f1f1;
+
+  --theme-primary: #f59e0b;
+  --theme-secondary: #ffc934ff;
   --black: #000;
   --white: #fff;
-  --dark_grey: #aaa;
-  --light_grey: #eee;
+  --dark_grey: #505050;
+  --light_grey: #b8b8b8ff;
   --purple: #8a1ddd;
   --blue: #1774ff;
   --light_blue: #d9e8ff;
@@ -34,10 +41,17 @@
   --text-sm: 12px;
 
   /* colors */
-  --color-theme: var(--theme);
-  --color-bg_primary: var(--bg_primary);
-  --color-bg_secondary: var(--bg_secondary);
+  /* Light theme colors */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
   --color-content: var(--content);
+  /* Dark theme colors */
+  --color-bg-primary-dark: var(--bg-primary-dark);
+  --color-bg-secondary-dark: var(--bg-secondary-dark);
+  --color-content-dark: var(--content-dark);
+
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-secondary: var(--theme-secondary);
   --color-black: var(--black);
   --color-white: var(--white);
   --color-dark_grey: var(--dark_grey);
@@ -57,25 +71,35 @@
 }
 
 body {
-  background: var(--bg_primary);
+  background: var(--bg-primary);
   color: var(--foreground);
   /* font-family: Arial, Helvetica, sans-serif; */
 }
 
-/* .dark {
-  --bg_primary: #1d1d1d;
-  --bg_secondary: #141414;
-  --content: #f1f1f1;
-} */
-
-[data-theme="dark"] {
-  --bg_primary: #1d1d1d;
-  --bg_secondary: #141414;
-  --content: #f1f1f1;
-}
-
 @layer base {
   body {
-    @apply bg-bg_primary text-content;
+    @apply bg-bg-primary text-content;
   }
+}
+
+.primary-background {
+  @apply bg-bg-primary dark:bg-bg-primary-dark;
+}
+
+.secondary-background {
+  @apply bg-bg-secondary dark:bg-bg-secondary-dark;
+}
+
+.custom-border-color {
+  @apply border-dark_grey/10 dark:border-dark_grey/20;
+}
+
+.custom-text-primary {
+  @apply text-content dark:text-content-dark;
+}
+.custom-text-primary-converse {
+  @apply text-content-dark dark:text-content;
+}
+.custom-text-secondary {
+  @apply text-dark_grey/80 dark:text-light_grey/80;
 }

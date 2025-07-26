@@ -71,11 +71,14 @@ const ChatPopover = () => {
   const [streaming, setStreaming] = useState(false);
   const scrollingRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(()=>{
-    if(scrollingRef?.current){
-        scrollingRef?.current.scrollTo({top: scrollingRef?.current?.scrollHeight, behavior: "smooth"})
+  useEffect(() => {
+    if (scrollingRef?.current) {
+      scrollingRef?.current.scrollTo({
+        top: scrollingRef?.current?.scrollHeight,
+        behavior: "smooth",
+      });
     }
-  },[chatRecords])
+  }, [chatRecords]);
 
   const handleSubmitPrompt = (ev: formSubmitEventType) => {
     ev.preventDefault();
@@ -159,9 +162,9 @@ const ChatPopover = () => {
     <Popover open={openChatPopover} onOpenChange={setOpenChatPopover}>
       <Tooltip defaultOpen open={openChatPopover ? false : undefined}>
         <TooltipTrigger asChild>
-          <PopoverTrigger className="absolute bottom-10 right-10 cursor-pointer">
+          <PopoverTrigger className="fixed bottom-10 right-10 cursor-pointer">
             <div className="border-b border-r border-blue pt-px pl-px relative">
-              <Bot size={56} className="border border-purple text-content" />
+              <Bot size={56} className="border border-purple text-content dark:text-content-dark" />
 
               {!openChatPopover && (
                 <div
@@ -176,18 +179,20 @@ const ChatPopover = () => {
             </div>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent className={`mr-10 ${poppins.className}`} >
+        <TooltipContent className={`mr-10 ${poppins.className}`}>
           <p className="font-medium">In a hurry? Let me help.</p>
         </TooltipContent>
       </Tooltip>
       <PopoverContent
-        className={`mr-10 h-[75svh] w-[28vw] min-w-[350px] px-2 py-1 flex flex-col ${openSans.className}`}
+        className={`mr-10 h-[75svh] w-[28vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary ${openSans.className}`}
       >
-        <div className="h-[45px] flex flex-col border-b border-light_grey py-2 select-none">
+        <div className="h-[45px] flex flex-col border-b border-dark_grey dark:border-light_grey py-2 select-none">
           <section className="flex items-center justify-between">
             <section className="flex items-center gap-2">
               <Bot size={24} className="text-blue" />
-              <h4 className="font-semibold">Assistant!</h4>
+              <h4 className="font-semibold text-bg-primary dark:text-bg-primary-dark">
+                Assistant!
+              </h4>
             </section>
             <Button
               size={"icon"}
@@ -199,19 +204,22 @@ const ChatPopover = () => {
             </Button>
           </section>
         </div>
-        <div ref={scrollingRef} className="flex flex-col h-full overflow-y-auto py-3 gap-2">
+        <div
+          ref={scrollingRef}
+          className="flex flex-col h-full overflow-y-auto py-3 gap-2"
+        >
           {chatRecords?.map((record: chatRecords, index: number) => (
             <MessageComponent key={index} {...record} />
           ))}
         </div>
         <form
           onSubmit={handleSubmitPrompt}
-          className="h-[45px] border-t border-light_grey flex items-center"
+          className="h-[50px] border-t border-dark_grey dark:border-light_grey flex items-center pl-2"
         >
           <input
             name="prompt"
             id="prompt"
-            className="h-full w-[90%] outline-none border-none text-md-1"
+            className="h-full w-[90%] outline-none border-none text-md-1 text-bg-primary dark:text-bg-primary-dark"
             value={userPrompt}
             placeholder="Enter your prompt"
             onChange={(ev: inputChangeEventType) =>

@@ -5,23 +5,33 @@ import { ThemeProvider } from "@/src/components/hoc/ThemeProvider";
 import SidebarComponent from "@/src/components/Sidebar/Sidebar";
 import React, { useCallback, useState } from "react";
 import Navbar from "@/src/components/navbar/Navbar";
+import ProfilePage from "@/src/components/profilePage/ProfilePage";
+import DragComponent from "@/src/components/dragComponent/DragComponent";
 
 export default function page() {
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
+  React.useEffect(() => setMounted(true), []);
+ 
   const handleToggleSidebar = useCallback((value: boolean) => {
     setOpenSideBar(value);
   }, []);
-
+  
+  if (!mounted) {
+    return null; // Or render a loading skeleton
+  }
   return (
-    <ThemeProvider>
-      <SidebarProvider className="bg-bg_primary" open={openSideBar}>
+    <ThemeProvider attribute={"class"} defaultTheme="dark" >
+      <SidebarProvider className="primary-background" open={openSideBar}>
         <SidebarComponent
           handleToggleSidebar={handleToggleSidebar}
           sidebarState={openSideBar}
         />
-        <main className="w-full ">
+        <main className="w-full relative">
+          {/* <DragComponent className="absolute top-40 left-20 z-0" /> */}
           <Navbar />
+          <ProfilePage/>
           <ChatPopover />
         </main>
       </SidebarProvider>
