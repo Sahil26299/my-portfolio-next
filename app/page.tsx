@@ -6,7 +6,8 @@ import SidebarComponent from "@/src/components/Sidebar/Sidebar";
 import React, { useCallback, useState } from "react";
 import Navbar from "@/src/components/navbar/Navbar";
 import ProfilePage from "@/src/components/profilePage/ProfilePage";
-import DragComponent from "@/src/components/dragComponent/DragComponent";
+import Footer from "@/src/components/footer/Footer";
+// import Footer from "@/src/components/footer/Footer";
 
 export default function page() {
   const [openSideBar, setOpenSideBar] = useState(false);
@@ -24,15 +25,16 @@ export default function page() {
   return (
     <ThemeProvider attribute={"class"} defaultTheme="dark" >
       <SidebarProvider className="primary-background" open={openSideBar}>
-        <SidebarComponent
+        {/* <SidebarComponent
           handleToggleSidebar={handleToggleSidebar}
           sidebarState={openSideBar}
-        />
+        /> */}
         <main className="w-full relative">
           {/* <DragComponent className="absolute top-40 left-20 z-0" /> */}
           <Navbar />
           <ProfilePage/>
           <ChatPopover />
+          <Footer/>
         </main>
       </SidebarProvider>
     </ThemeProvider>

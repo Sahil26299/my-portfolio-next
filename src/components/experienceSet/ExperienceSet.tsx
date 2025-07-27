@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
+import { details } from "@/src/utilities";
 
 dayjs.extend(relativeTime);
 
@@ -34,7 +35,7 @@ interface Experience {
   description: string;
   responsibilities: string[];
   technologies: string[];
-  achievements: string[];
+  achievements: string;
   companyImpact: {
     metric: string;
     improvement: string;
@@ -61,20 +62,24 @@ const experiences: Experience[] = [
     description:
       "Leading development of enterprise-grade web applications and mentoring junior developers in a fast-paced startup environment.",
     responsibilities: [
-      "Architected and developed scalable React/Next.js applications serving 10k+ users",
-      "Led a team of 4 developers in implementing new product features",
+      "Architected and developed scalable React/Next.js applications.",
+      "Led a team of 5 developers in implementing new product features",
       "Optimized application performance resulting in 40% faster load times",
       "Established code review processes and development best practices",
     ],
-    technologies: ["React", "Next.js", "TypeScript", "AWS", "Docker"],
-    achievements: [
-      "Reduced deployment time by 60% through CI/CD pipeline optimization",
-      "Implemented real-time features increasing user engagement by 35%",
-      "Mentored 3 junior developers who were promoted within 8 months",
+    technologies: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Redux toolkit (RTK)",
+      "AWS",
+      "Docker",
     ],
+    achievements:
+      "Enhanced team productivity by implementing linting rules, establishing consistent project structures, and initiating regular team syncs to ensure smooth collaboration. Proactively contributed across multiple projects, introduced test cases to reduce production issues, and laid the groundwork for scalable development.",
     companyImpact: {
       metric: "Revenue Growth",
-      improvement: "+45%",
+      improvement: "+25%",
       description:
         "New features and performance improvements contributed to significant revenue increase and customer retention",
     },
@@ -90,51 +95,48 @@ const experiences: Experience[] = [
       challenges:
         "Learned to balance technical debt with feature delivery while maintaining code quality standards",
     },
-    teamSize: "4 developers",
-    projects: 8,
+    teamSize: "5 developers",
+    projects: 15,
   },
   {
     id: "previous",
-    company: "Digital Innovations Inc",
-    role: "Frontend Developer",
-    duration: "2 years",
-    period: "Mar 2021 - Dec 2022",
-    location: "Austin, TX",
-    companyType: "Digital Agency",
+    company: "Mobiloitte Technologies",
+    role: "React Native Developer",
+    duration: "1.2 years",
+    period: "April 2022 - June 2023",
+    location: "Pune, India",
+    companyType: "IT Services & Consulting",
     description:
-      "Developed responsive web applications for diverse clients ranging from startups to Fortune 500 companies.",
+      "Developed responsive mobile applications for diverse clients ranging from startups to large scale MNCs.",
     responsibilities: [
-      "Built 15+ client websites using React, Vue.js, and modern CSS frameworks",
+      "Built 6+ client mobile applications using React Native and modern its modern tools like Redux Toolkit (RTK), Firebase and Payment gateways",
       "Collaborated with UX/UI designers to implement pixel-perfect designs",
       "Integrated third-party APIs and payment systems",
       "Maintained and updated legacy codebases",
     ],
     technologies: [
-      "React",
-      "Vue.js",
+      "React native",
+      "Redux toolkit (RTK)",
       "JavaScript",
-      "Sass",
-      "Webpack",
+      "Firebase",
       "REST APIs",
-      "Stripe",
+      "Razorpay / Stripe",
     ],
-    achievements: [
-      "Delivered all projects on time with 98% client satisfaction rate",
-      "Reduced development time by 30% through reusable component library",
-      "Won 'Developer of the Year' award for exceptional client feedback",
-    ],
+    achievements:
+      "Gained valuable exposure to mobile application development, including app behavior and architectural patterns, contributing to both industry-standard practices and my personal professional growth.",
     companyImpact: {
       metric: "Client Retention",
-      improvement: "+25%",
+      improvement: "+15%",
       description:
-        "High-quality deliverables and technical expertise led to increased client retention and referrals",
+        "Mid-High quality deliverables and technical expertise led to increased client retention and referrals",
     },
     personalGrowth: {
       skills: [
+        "UI development",
+        "API Integration",
         "Client Communication",
         "Project Management",
-        "Cross-browser Compatibility",
-        "API Integration",
+        "Cross-platform Compatibility",
       ],
       leadership:
         "Learned to communicate technical concepts to non-technical stakeholders effectively",
@@ -142,58 +144,7 @@ const experiences: Experience[] = [
         "Adapted to working with diverse tech stacks and tight deadlines while maintaining quality",
     },
     teamSize: "6 developers",
-    projects: 15,
-  },
-  {
-    id: "first",
-    company: "StartupHub",
-    role: "Junior Web Developer",
-    duration: "1.5 years",
-    period: "Sep 2019 - Feb 2021",
-    location: "Remote",
-    companyType: "Early-stage Startup",
-    description:
-      "First professional role where I contributed to building the company's core product from the ground up.",
-    responsibilities: [
-      "Developed user interface components using HTML, CSS, and JavaScript",
-      "Assisted in database design and backend API development",
-      "Participated in daily standups and sprint planning",
-      "Fixed bugs and implemented minor feature enhancements",
-    ],
-    technologies: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "PHP",
-      "MySQL",
-      "Bootstrap",
-      "jQuery",
-    ],
-    achievements: [
-      "Successfully launched MVP within 6 months of joining",
-      "Improved website accessibility score from 65% to 92%",
-      "Contributed to 50+ bug fixes and feature implementations",
-    ],
-    companyImpact: {
-      metric: "Product Launch",
-      improvement: "MVP Success",
-      description:
-        "Played crucial role in successful product launch that secured Series A funding",
-    },
-    personalGrowth: {
-      skills: [
-        "Web Fundamentals",
-        "Problem Solving",
-        "Agile Methodology",
-        "Version Control",
-      ],
-      leadership:
-        "Developed strong foundation in software development practices and team collaboration",
-      challenges:
-        "Learned to work in a fast-paced startup environment and adapt to changing requirements",
-    },
-    teamSize: "3 developers",
-    projects: 5,
+    projects: 8,
   },
 ];
 
@@ -230,22 +181,24 @@ export default function ExperienceSection() {
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        transition={{ duration: 0.6, delay: 0.1 }}
         className="relative"
       >
         {/* Timeline Line */}
         <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue via-purple to-green-500 hidden md:block" />
 
         <div className="space-y-8">
-          {experiences.map((exp, index) => (
+          {details.experiences.map((exp, index) => (
             <motion.div
               key={exp.id}
               variants={cardVariants}
               //   whileHover={{ scale: 1.01 }}
-              className="relative"
+              className="relative group"
             >
               {/* Timeline Dot */}
               <div className="absolute left-6 top-8 w-4 h-4 bg-blue rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
+              <div className="group-hover:animate-ping absolute left-6 top-8 w-4 h-4 bg-blue rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
 
               <Card className="hover:scale-[1.01] ml-0 md:ml-16 secondary-background backdrop-blur-sm custom-border-color hover:shadow-xl transition-all duration-300">
                 <CardHeader className="pb-4">
@@ -264,7 +217,10 @@ export default function ExperienceSection() {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-xs">
+                      <Badge
+                        variant="outline"
+                        className="text-xs custom-border-color"
+                      >
                         <Calendar className="w-3 h-3 mr-1" />
                         {exp.period}
                       </Badge>
@@ -320,7 +276,7 @@ export default function ExperienceSection() {
                       {exp.responsibilities.map((resp, idx) => (
                         <li
                           key={idx}
-                          className="flex items-start space-x-2 text-sm text-slate-600 dark:text-slate-400"
+                          className="flex items-start space-x-2 text-sm custom-text-secondary"
                         >
                           <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                           <span>{resp}</span>
@@ -337,7 +293,11 @@ export default function ExperienceSection() {
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {exp.technologies.map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs">
+                        <Badge
+                          key={tech}
+                          variant="outline"
+                          className="text-xs custom-border-color"
+                        >
                           {tech}
                         </Badge>
                       ))}
@@ -350,17 +310,9 @@ export default function ExperienceSection() {
                       <Award className="w-4 h-4 mr-2" />
                       Key Achievements
                     </h4>
-                    <ul className="space-y-2">
-                      {exp.achievements.map((achievement, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start space-x-2 text-sm text-slate-600 dark:text-slate-400"
-                        >
-                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0" />
-                          <span>{achievement}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <span className="flex items-start space-x-2 text-sm custom-text-secondary">
+                      {exp.achievements}
+                    </span>
                   </div>
 
                   {/* Impact & Growth */}
@@ -400,7 +352,7 @@ export default function ExperienceSection() {
                               <Badge
                                 key={skill}
                                 variant="outline"
-                                className="text-xs bg-purple-100 dark:bg-purple-900/50"
+                                className="text-xs bg-purple-100 dark:bg-purple custom-border-color"
                               >
                                 {skill}
                               </Badge>

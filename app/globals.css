@@ -12,7 +12,6 @@
   --bg-primary-dark: #1d1d1d;
   --bg-secondary-dark: #141414;
   --content-dark: #f1f1f1;
-
   --theme-primary: #f59e0b;
   --theme-secondary: #ffc934ff;
   --black: #000;
@@ -101,5 +100,5 @@ body {
   @apply text-content-dark dark:text-content;
 }
 .custom-text-secondary {
-  @apply text-dark_grey/80 dark:text-light_grey/80;
+  @apply text-slate-600 dark:text-slate-400
 }

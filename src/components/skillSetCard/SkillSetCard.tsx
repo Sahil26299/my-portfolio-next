@@ -21,131 +21,9 @@ import {
   Palette,
   TabletSmartphone,
   Container,
-  GitPullRequestArrow,
+  Github,
 } from "lucide-react";
-
-interface Skill {
-  id: string;
-  name: string;
-  category: string;
-  proficiency: number;
-  experience: string;
-  description: string;
-  icon: React.ReactNode;
-  color: string;
-  projects: number;
-}
-
-const skills: Skill[] = [
-  {
-    id: "reactnative",
-    name: "React Native",
-    category: "Frontend",
-    proficiency: 75,
-    experience: "3+ years",
-    description:
-      "Bringing mobile ideas to life with React Native — I build cross-platform apps that feel native and perform seamlessly.",
-    icon: <TabletSmartphone className="w-6 h-6" />,
-    color: "bg-cyan-500",
-    projects: 8,
-  },
-  {
-    id: "react",
-    name: "React.js",
-    category: "Frontend",
-    proficiency: 80,
-    experience: "3+ years",
-    description:
-      "From scalable architecture to optimized rendering, I build dynamic, high-performance web apps with React at the core.",
-    icon: <Code className="w-6 h-6" />,
-    color: "bg-blue",
-    projects: 15,
-  },
-  {
-    id: "nextjs",
-    name: "Next.js",
-    category: "Full-stack",
-    proficiency: 65,
-    experience: "2+ years",
-    description:
-      "Combining SSR, API routes, and seamless routing — I craft performant and SEO-friendly web applications using Next.js.",
-    icon: <Zap className="w-6 h-6 " />,
-    color: "bg-black dark:bg-white custom-text-primary-converse",
-    projects: 5,
-  },
-  {
-    id: "typescript",
-    name: "TypeScript",
-    category: "Language",
-    proficiency: 75,
-    experience: "2.5+ years",
-    description:
-      "Strong expertise in TypeScript for type-safe development, advanced types, generics, and building scalable applications with better developer experience.",
-    icon: <Code className="w-6 h-6" />,
-    color: "bg-blue",
-    projects: 18,
-  },
-  {
-    id: "tailwind",
-    name: "Tailwind CSS",
-    category: "Styling",
-    proficiency: 92,
-    experience: "2+ years",
-    description:
-      "Design meets code — I craft elegant, responsive UIs rapidly with Tailwind CSS, ensuring pixel precision and clean utility-first styling.",
-    icon: <Palette className="w-6 h-6" />,
-    color: "bg-cyan-500",
-    projects: 18,
-  },
-  {
-    id: "git",
-    name: "Git",
-    category: "Version Control",
-    proficiency: 85,
-    experience: "3+ years",
-    description:
-      "Version control isn't just a habit — it's second nature. I manage branches, resolve conflicts, and streamline collaboration with Git like a pro.",
-    icon: <GitPullRequestArrow className="w-6 h-6 " />,
-    color: "bg-black dark:bg-white custom-text-primary-converse",
-    projects: 22,
-  },
-  {
-    id: "docker",
-    name: "Docker",
-    category: "Containerization",
-    proficiency: 65,
-    experience: "2+ years",
-    description:
-      "I containerize applications with Docker for consistent and lightweight deployment — from dev to staging, effortlessly.",
-    icon: <Container className="w-6 h-6" />,
-    color: "bg-blue",
-    projects: 12,
-  },
-  {
-    id: "nodejs",
-    name: "Node.js",
-    category: "Backend",
-    proficiency: 80,
-    experience: "2+ years",
-    description:
-      "Solid experience in server-side JavaScript, building RESTful APIs, working with databases, authentication, and deploying scalable backend solutions.",
-    icon: <Database className="w-6 h-6" />,
-    color: "bg-green-600",
-    projects: 3,
-  },
-  {
-    id: "collaboration",
-    name: "Team Collaboration",
-    category: "Soft Skills",
-    proficiency: 65,
-    experience: "4+ years",
-    description:
-      "I thrive in collaborative environments — bridging communication, code reviews, and task ownership to drive team success",
-    icon: <Users className="w-6 h-6" />,
-    color: "bg-purple",
-    projects: 6,
-  },
-];
+import { details } from "@/src/utilities";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -181,6 +59,26 @@ const getProficiencyLabel = (proficiency: number) => {
   return "Beginner";
 };
 
+const getSkillIcon = (skill: string) => {
+  if (skill === "reactnative") {
+    return <TabletSmartphone className="w-6 h-6" />;
+  } else if (skill === "tailwind") {
+    return <Palette className="w-6 h-6" />;
+  } else if (skill === "nodejs") {
+    return <Database className="w-6 h-6" />;
+  } else if (skill === "git") {
+    return <Github className="w-6 h-6" />;
+  }else if (skill === "docker") {
+    return <Container className="w-6 h-6" />;
+  }else if (skill === "collaboration") {
+    return <Users className="w-6 h-6" />;
+  }else if (skill === "nextjs") {
+    return <Zap className="w-6 h-6 " />;
+  } else {
+    return <Code className="w-6 h-6" />;
+  }
+};
+
 const getProficiencyColor = (proficiency: number) => {
   if (proficiency >= 90) return "text-green-600 dark:text-green-400";
   if (proficiency >= 80) return "text-blue-600 dark:text-blue-400";
@@ -193,10 +91,10 @@ export default function SkillSetCards() {
     <motion.div
       variants={containerVariants}
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-8"
     >
-      {skills.map((skill) => (
+      {details.skills.map((skill) => (
         <motion.div
           key={skill.id}
           variants={cardVariants}
@@ -207,11 +105,11 @@ export default function SkillSetCards() {
           className="select-none"
           whileTap={{ scale: 0.98 }}
         >
-          <Card className="h-full secondary-background backdrop-blur-sm custom-border-color border-2 hover:shadow-lg transition-shadow duration-300">
+          <Card className="h-full secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className={`p-2 rounded-lg ${skill.color} text-white`}>
-                  {skill.icon}
+                  {getSkillIcon(skill.id)}
                 </div>
                 <Badge variant="secondary" className="text-xs">
                   {skill.category}

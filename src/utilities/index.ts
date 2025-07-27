@@ -5,9 +5,9 @@ import {
   ArrayOfStringType,
   GenericObjectInterface,
 } from "./commonInterface/commonInterfaces";
+import details from "./json/details.json";
 
-export { poppins };
-
+export { poppins, details };
 export type {
   formSubmitEventType,
   inputChangeEventType,
