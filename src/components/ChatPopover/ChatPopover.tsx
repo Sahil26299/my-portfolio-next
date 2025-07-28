@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Bot, CircleUser, Send, User, X } from "lucide-react";
+import { Bot, Send, X } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import style from "./ChatPopover.module.css";
 import {
@@ -31,7 +31,7 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
   if (user === "bot") {
     return (
       <div
-        className={`flex relative p-2 gap-2 ${style.chatMessageInAnimation}`}
+        className={`flex relative p-2 gap-2 custom-text-primary-converse ${style.chatMessageInAnimation}`}
       >
         <Bot
           size={24}
@@ -51,9 +51,9 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
   } else {
     return (
       <div
-        className={`flex relative p-2 gap-2 ${style.chatMessageInAnimation}`}
+        className={`flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
       >
-        <span className="text-md-1 font-semibold sticky top-2 flex flex-col h-fit">
+        <span className="text-md-1 font-semibold sticky top-2 flex flex-col h-fit mt-1">
           You
         </span>
         <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
@@ -100,20 +100,15 @@ const ChatPopover = () => {
 
   const submitPromptAPI = async (message: string = userPrompt) => {
     try {
-      const response: GenericObjectInterface = await fetch(
-        "http://localhost:11434/api/generate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "mistral",
-            prompt: message,
-            stream: true,
-          }),
-        }
-      );
+      const response: GenericObjectInterface = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: message,
+        }),
+      });
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let result = "";
@@ -126,7 +121,7 @@ const ChatPopover = () => {
         const chunk = decoder.decode(value, { stream: true });
         // Optional: parse chunk to get actual message if it's JSON line-delimited
         result += chunk;
-        console.log("Chunk:", JSON.parse(chunk)?.response); // Or update React state here
+        // console.log("Chunk:", JSON.parse(chunk)?.response); // Or update React state here
         setChatRecords((prev) => [
           ...prev?.slice(0, prev?.length - 1),
           {
@@ -156,15 +151,16 @@ const ChatPopover = () => {
     );
   }, [chatRecords, streaming, userPrompt]);
 
-  console.log(disableSubmit, "disableSubmit");
-
   return (
     <Popover open={openChatPopover} onOpenChange={setOpenChatPopover}>
       <Tooltip defaultOpen open={openChatPopover ? false : undefined}>
         <TooltipTrigger asChild>
           <PopoverTrigger className="fixed bottom-10 right-10 cursor-pointer">
             <div className="border-b border-r border-blue pt-px pl-px relative">
-              <Bot size={56} className="border border-purple text-content dark:text-content-dark" />
+              <Bot
+                size={56}
+                className="border border-purple text-content dark:text-content-dark"
+              />
 
               {!openChatPopover && (
                 <div
