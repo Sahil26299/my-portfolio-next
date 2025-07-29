@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import fs from "fs";
 import PdfParse from "pdf-parse";
-import { pipeline } from "@xenova/transformers";
+import { FeatureExtractionPipeline, pipeline } from "@xenova/transformers";
 import { createClient } from "@supabase/supabase-js";
 
 console.log(process.env.SUPABASE_URL);
@@ -29,7 +29,7 @@ function chunkText(
   return chunks;
 }
 
-async function parsePdf() {
+async function parsePdf(embedder: FeatureExtractionPipeline) {
   try {
     const dataBuffer = fs.readFileSync("public/files/sahilLokhandeCV.pdf");
     const pdfData = await PdfParse(dataBuffer);
@@ -37,25 +37,21 @@ async function parsePdf() {
 
     const chunks = chunkText(fullText);
 
-    const embedder = await pipeline(
-      "feature-extraction",
-      "Xenova/all-MiniLM-L6-v2"
-    );
-
     const pdfEmbeddings = await Promise.all(
       chunks.map(async (chunk) => {
-        const embedding2D:any = await embedder(chunk);
-        const flatEmbedding = embedding2D[0]; // flatten from 2D to 1D
-        return flatEmbedding;
+        const embedding2D: any = await embedder(chunk, {
+          pooling: "mean",
+          normalize: true,
+        });
+        return embedding2D.data;
       })
     );
 
     for (let i = 0; i < chunks.length; i++) {
-      const response = await supabase.from("documents").insert({
+      await supabase.from("documents").insert({
         content: chunks[i],
-        embedding: pdfEmbeddings[i], // This is now a flat array
+        embedding: Array.from(pdfEmbeddings[i]),
       });
-      console.log(response.status, "status", response.error, "response.error");
     }
   } catch (error) {
     console.log(error, "errorrrr vectorising");
@@ -65,10 +61,40 @@ async function parsePdf() {
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
   const supabaseDb = await supabase.from("documents").select();
-  console.log(supabaseDb, "supabaseDb");
+
+  // initialize an embedder to embed pdf and puser input prompt
+  const embedder = await pipeline(
+    "feature-extraction",
+    "Xenova/all-MiniLM-L6-v2"
+  );
+  console.log(supabaseDb?.data?.length, "supabaseDb?.data?.length");
   if (supabaseDb?.data?.length === 0) {
-    parsePdf();
+    // if embeddings are not already present, insert embeddings into the vector store first
+    parsePdf(embedder);
   }
+
+  const userEmbedding = await embedder(prompt, {
+    pooling: "mean",
+    normalize: true,
+  });
+
+  // fetch the most similar documents based on user prompt
+  const matchResponse = await supabase.rpc("match_documents", {
+    query_embedding: userEmbedding,
+    match_threshold: 0.78,
+    match_count: 5,
+  });
+console.log(matchResponse,'matches')
+  // const processedPrompt = `
+  // You are a helpful assistant. Use the following context to answer:
+
+  // Context:
+  // ${matches.map((m: any) => m.content).join("\n\n")}
+
+  // Question:
+  // ${prompt}
+  // `;
+
   const ollamaResponse = await fetch("http://localhost:11434/api/generate", {
     method: "POST",
     headers: {
