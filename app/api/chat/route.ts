@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
 import fs from "fs";
 import PdfParse from "pdf-parse";
-import { FeatureExtractionPipeline, pipeline } from "@xenova/transformers";
+import {
+  FeatureExtractionPipeline,
+  pipeline,
+  Tensor,
+} from "@xenova/transformers";
 import { createClient } from "@supabase/supabase-js";
+import jsonData from "../../../src/utilities/json/details.json";
 
 console.log(process.env.SUPABASE_URL);
 const supabase = createClient(
@@ -58,6 +63,24 @@ async function parsePdf(embedder: FeatureExtractionPipeline) {
   }
 }
 
+const fetchMatchingEmbeddings = async (
+  userEmbedding: Tensor,
+  threshold: number
+) => {
+  // fetch the most similar documents based on user prompt
+  const result = await supabase.rpc("match_documents", {
+    query_embedding: Array.from(userEmbedding?.data),
+    match_threshold: threshold,
+    match_count: 5,
+  });
+  if (result?.data?.length > 1 || threshold <= 0.1) {
+    console.log(threshold, "final threshold");
+    return result;
+  } else {
+    return await fetchMatchingEmbeddings(userEmbedding, threshold - 0.2);
+  }
+};
+
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
   const supabaseDb = await supabase.from("documents").select();
@@ -79,21 +102,21 @@ export async function POST(req: NextRequest) {
   });
 
   // fetch the most similar documents based on user prompt
-  const matchResponse = await supabase.rpc("match_documents", {
-    query_embedding: userEmbedding,
-    match_threshold: 0.78,
-    match_count: 5,
-  });
-console.log(matchResponse,'matches')
-  // const processedPrompt = `
-  // You are a helpful assistant. Use the following context to answer:
+  const matchResponse = await fetchMatchingEmbeddings(userEmbedding, 0.5);
+  console.log(matchResponse?.data?.length, "matchResponse length");
 
-  // Context:
-  // ${matches.map((m: any) => m.content).join("\n\n")}
+  const processedPrompt = `
+  You are a helpful assistant. Use the following context to answer:
 
-  // Question:
-  // ${prompt}
-  // `;
+  Context:
+  ${matchResponse?.data?.map((m: any) => m.content).join("\n\n")}
+  If there is anythng outside the above context, please respond politely with I have no context of outside world. If you dont have any context related to questions asked, then please share my contact details Email: ${
+    jsonData.email
+  }, Phone: ${jsonData.phone} and ask user to get back to me instead politely.
+
+  Question:
+  ${prompt}
+  `;
 
   const ollamaResponse = await fetch("http://localhost:11434/api/generate", {
     method: "POST",
@@ -102,7 +125,7 @@ console.log(matchResponse,'matches')
     },
     body: JSON.stringify({
       model: "mistral",
-      prompt,
+      prompt: processedPrompt,
       stream: true, // ✅ Enable streaming
     }),
   });
