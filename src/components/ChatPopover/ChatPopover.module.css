@@ -37,3 +37,21 @@
     transform: translateX(0px);
   }
 }
+
+.markdownTableStyles {
+  a {
+    text-decoration-line: underline;
+    font-style: italic;
+  }
+  table {
+    thead > tr > th {
+      background-color: powderblue;
+      border: 1px solid #cacacaff;
+    }
+    tbody > tr > td {
+      border: 1px solid #cacacaff;
+      background-color: rgb(212, 227, 230);
+      padding: 8px;
+    }
+  }
+}

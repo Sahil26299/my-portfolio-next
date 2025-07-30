@@ -13,13 +13,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   formSubmitEventType,
   GenericObjectInterface,
   inputChangeEventType,
 } from "@/src/utilities";
 import { openSans, poppins } from "@/src/utilities/themes/font";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import LottieAnimProvider from "../LottieProvider/LottieAnimProvider";
+import { animatedLoader } from "@/src/assets";
+import jsonData from "../../../src/utilities/json/details.json";
 
 interface chatRecords {
   user: "user" | "bot";
@@ -36,22 +40,33 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
         <Bot
           size={24}
           strokeWidth={1.75}
-          className={`sticky top-2 flex flex-col h-fit`}
+          className={`sticky top-2 flex flex-col h-fit mt-1`}
         />
         <span
-          className={`text-black min-w-[75px] min-h-[35px] ${
-            isLoading ? "animate-pulse" : ""
-          }
-       text-md-1 rounded-md bg-light_grey border-dark_grey/20 border p-2 flex flex-col justify-center max-w-[90%]`}
+          className={`${
+            isLoading ? "" : "bg-gradient-to-br from-blue/20 to-purple/10"
+          } text-black min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
+            style.markdownTableStyles
+          }`}
         >
-          {message}
+          {isLoading ? (
+            <LottieAnimProvider
+              animationFile={animatedLoader}
+              height={20}
+              width={50}
+            />
+          ) : (
+            <Markdown key={message} remarkPlugins={[remarkGfm]}>
+              {message}
+            </Markdown>
+          )}
         </span>
       </div>
     );
   } else {
     return (
       <div
-        className={`flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
+        className={`mt-2 flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
       >
         <span className="text-md-1 font-semibold sticky top-2 flex flex-col h-fit mt-1">
           You
@@ -121,7 +136,7 @@ const ChatPopover = () => {
         const chunk = decoder.decode(value, { stream: true });
         // Optional: parse chunk to get actual message if it's JSON line-delimited
         result += chunk;
-        // console.log("Chunk:", JSON.parse(chunk)?.response); // Or update React state here
+        console.log("Chunk:", JSON.parse(chunk)?.response); // Or update React state here
         setChatRecords((prev) => [
           ...prev?.slice(0, prev?.length - 1),
           {
@@ -134,7 +149,10 @@ const ChatPopover = () => {
         ]);
       }
       setStreaming(false);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setStreaming(false);
+    }
   };
 
   /**
@@ -180,19 +198,19 @@ const ChatPopover = () => {
         </TooltipContent>
       </Tooltip>
       <PopoverContent
-        className={`mr-10 h-[75svh] w-[28vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary ${openSans.className}`}
+        className={`mr-10 h-[75svh] w-[30vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary ${openSans.className}`}
       >
         <div className="h-[45px] flex flex-col border-b border-dark_grey dark:border-light_grey py-2 select-none">
           <section className="flex items-center justify-between">
             <section className="flex items-center gap-2">
               <Bot size={24} className="text-blue" />
-              <h4 className="font-semibold text-bg-primary dark:text-bg-primary-dark">
+              <h4 className="font-semibold custom-text-primary-converse">
                 Assistant!
               </h4>
             </section>
             <Button
               size={"icon"}
-              className="h-[25px] w-[25px]"
+              className="h-[25px] w-[25px] custom-text-primary-converse"
               variant={"ghost"}
               onClick={() => setOpenChatPopover(false)}
             >
@@ -202,7 +220,7 @@ const ChatPopover = () => {
         </div>
         <div
           ref={scrollingRef}
-          className="flex flex-col h-full overflow-y-auto py-3 gap-2"
+          className={`flex flex-col h-full overflow-y-auto py-3 gap-1`}
         >
           {chatRecords?.map((record: chatRecords, index: number) => (
             <MessageComponent key={index} {...record} />
@@ -215,7 +233,7 @@ const ChatPopover = () => {
           <input
             name="prompt"
             id="prompt"
-            className="h-full w-[90%] outline-none border-none text-md-1 text-bg-primary dark:text-bg-primary-dark"
+            className="h-full w-[90%] outline-none border-none text-md-1 custom-text-primary-converse"
             value={userPrompt}
             placeholder="Enter your prompt"
             onChange={(ev: inputChangeEventType) =>

@@ -34,15 +34,24 @@ function chunkText(
   return chunks;
 }
 
-async function parsePdf(embedder: FeatureExtractionPipeline) {
+async function parsePdf(
+  embedder: FeatureExtractionPipeline,
+  fileType: "pdf" | "json" = "pdf"
+) {
   try {
-    const dataBuffer = fs.readFileSync("public/files/sahilLokhandeCV.pdf");
-    const pdfData = await PdfParse(dataBuffer);
-    const fullText = pdfData.text;
+    let fullText = "";
+    if (fileType === "pdf") {
+      const dataBuffer = fs.readFileSync("public/files/sahilLokhandeCV.pdf");
+      const pdfData = await PdfParse(dataBuffer);
+      fullText = pdfData.text;
+    } else if (fileType === "json") {
+      fullText = JSON.stringify(jsonData);
+    }
+    // const fullText = pdfData.text;
 
     const chunks = chunkText(fullText);
 
-    const pdfEmbeddings = await Promise.all(
+    const dataEmbeddings = await Promise.all(
       chunks.map(async (chunk) => {
         const embedding2D: any = await embedder(chunk, {
           pooling: "mean",
@@ -55,7 +64,7 @@ async function parsePdf(embedder: FeatureExtractionPipeline) {
     for (let i = 0; i < chunks.length; i++) {
       await supabase.from("documents").insert({
         content: chunks[i],
-        embedding: Array.from(pdfEmbeddings[i]),
+        embedding: Array.from(dataEmbeddings[i]),
       });
     }
   } catch (error) {
@@ -106,17 +115,46 @@ export async function POST(req: NextRequest) {
   console.log(matchResponse?.data?.length, "matchResponse length");
 
   const processedPrompt = `
-  You are a helpful assistant. Use the following context to answer:
+You are a professional and diplomatic assistant. Use only the information provided below to answer the user's question.
 
-  Context:
-  ${matchResponse?.data?.map((m: any) => m.content).join("\n\n")}
-  If there is anythng outside the above context, please respond politely with I have no context of outside world. If you dont have any context related to questions asked, then please share my contact details Email: ${
+Knowledge Base:
+${matchResponse?.data?.map((m: any) => m.content).join("\n\n")}
+
+Additional Details:
+- Current employer: Pyrack (since September 2023)
+- Previous employer: Mobiloitte (April 2022 to July 2023)
+
+Instructions:
+- Only respond using the information from the knowledge base or additional details above.
+- If someone asks any other confidential information like BANK BALANCE or SALARY or PERSONAL INFORMATION like FAMILY MEMBERS etc, then decline it politely by saying,
+  “I am not allowed to have any kind of conversation on Sahil's personal / confidential information. Please contact him instead 😊 [${
     jsonData.email
-  }, Phone: ${jsonData.phone} and ask user to get back to me instead politely.
+  }](mailto:${jsonData.email}) or ${jsonData.phone}.”
+- If the user greeting is something like "Hi", "Hello", "Thanks", "Thank you", or similar, respond briefly with a polite acknowledgment and mention: 
+  “If you have any questions, please don't hesitate to reach out to Sahil at [${
+    jsonData.email
+  }](mailto:${jsonData.email}) or ${jsonData.phone}“
+- If the question is outside the provided information or unrelated, respond professionally and say: 
+  “As per my current knowledge, I do not have the information to answer that. Please feel free to contact Sahil directly at [${
+    jsonData.email
+  }](mailto:${jsonData.email}) or ${jsonData.phone} for further assistance.”
+- Do not mention the word "context" in your responses.
+- Avoid unnecessary elaboration, speculation, or unrelated content.
+- Maintain a concise, helpful, and professional tone at all times.
+- Use 1–3 emojis from the list below in appropriate responses to keep the tone professional and engaging. Do not skip this instruction unless the response is strictly a rejection or redirect.
+  Emoji Meaning Key:
+  😊 - Friendly / Polite tone  
+  📈 - Growth / Progress / Success  
+  💼 - Job / Work / Profession  
+  🎯 - Goals / Focus / Achievements  
+  🧠 - Skills / Knowledge / Expertise  
+  🏢 - Company / Workplace  
+  📩 - Contact / Communication  
+  👍 - Confirmation / Agreement / Support
 
-  Question:
-  ${prompt}
-  `;
+User Question:
+${prompt}
+`;
 
   const ollamaResponse = await fetch("http://localhost:11434/api/generate", {
     method: "POST",
