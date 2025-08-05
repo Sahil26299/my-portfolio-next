@@ -16,24 +16,24 @@ function ProfilePage() {
         id="about"
         className="flex flex-col items-center justify-center h-[calc(100vh-50px)] "
       >
-        <section className="flex items-center gap-6 relative">
+        <section className="flex items-center md:flex-row flex-col gap-6 relative">
           <Image
             src={profilePic}
             alt="Profile pic"
-            className="h-96 w-96 object-cover rounded-xl overflow-hidden"
+            className="xl:h-96 xl:w-96 lg:h-84 lg:w-84 md:h-64 md:w-64 sm:h-84 sm:w-84 h-60 w-60 object-cover rounded-xl overflow-hidden"
           />
           <a
             href="https://maps.app.goo.gl/uc4KFEsGDKYhZHScA"
             target="_blank"
-            className="text-green-500 absolute top-2 left-65 text-md-1 bg-dark_grey/80 px-2 py-1 rounded-sm font-medium flex items-center gap-2 cursor-pointer group"
+            className="text-green-500 absolute xl:top-2 xl:left-65 lg:top-2 lg:left-55 md:top-2 md:left-38 sm:top-2 sm:left-62 top-2 left-53 text-md-1 bg-dark_grey/80 px-2 py-1 rounded-sm font-medium flex items-center gap-2 cursor-pointer group"
           >
             <div className="w-2 h-2 bg-green-400 rounded-full">
               <div className="w-2 h-2 bg-green-400 rounded-full group-hover:animate-ping" />
             </div>{" "}
-            <span className="text-white">Pune, India</span>
+            <span className="text-white lg:text-md-1 md:text-sm sm:text-md-1 text-sm">Pune, India</span>
           </a>
-          <section className="flex flex-col gap-2">
-            <section className="custom-text-secondary font-medium flex items-center gap-2 text-md-1 border-b border-light_grey max-w-fit">
+          <section className="flex flex-col gap-2 px-3">
+            <section className="custom-text-secondary font-medium flex items-center gap-2 lg:text-md-1 sm:text-sm text-[11px] border-b border-light_grey max-w-fit">
               <motion.a
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -61,16 +61,16 @@ function ProfilePage() {
                 LinkedIn
               </motion.a>
             </section>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
+            <h2 className="lg:text-2xl sm:text-xl text-[36px] font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
               Sahil Lokhande
             </h2>
             <TypeWriterUI
               botResponse="Frontend Developer Pioneering Interfaces with AI"
               delay={50}
-              textClass="uppercase italic custom-text-secondary font-medium text-md"
+              textClass="uppercase italic custom-text-secondary font-medium lg:text-md text-md-1"
             />
             <section className="flex items-center gap-2 mt-2">
-              <GradientButton />
+              <GradientButton  />
             </section>
           </section>
         </section>

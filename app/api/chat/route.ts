@@ -8,6 +8,7 @@ import {
 } from "@xenova/transformers";
 import { createClient } from "@supabase/supabase-js";
 import jsonData from "../../../src/utilities/json/details.json";
+import csv from "csv-parser";
 
 console.log(process.env.SUPABASE_URL);
 const supabase = createClient(
@@ -34,9 +35,16 @@ function chunkText(
   return chunks;
 }
 
+/**
+ * Parse pdf / json / text -> embed it using embedder -> store its embeddings into vector store
+ * @param embedder embedder used to embed data
+ * @param fileType type of data being embedded
+ * @param textualData if filetype is text -> provide textual data which contains text to embed
+ */
 async function parsePdf(
   embedder: FeatureExtractionPipeline,
-  fileType: "pdf" | "json" = "pdf"
+  fileType: "pdf" | "json" | "text" = "pdf",
+  textualData?: string
 ) {
   try {
     let fullText = "";
@@ -46,6 +54,8 @@ async function parsePdf(
       fullText = pdfData.text;
     } else if (fileType === "json") {
       fullText = JSON.stringify(jsonData);
+    } else if (fileType === "text" && textualData) {
+      fullText = textualData as string;
     }
     // const fullText = pdfData.text;
 
@@ -72,6 +82,12 @@ async function parsePdf(
   }
 }
 
+/**
+ * Based on user's prompt, fetch the matching data from the data base
+ * @param userEmbedding user input prompt embeded
+ * @param threshold matching threshold. 0.5 = 50% should match based on cosine / any other similarity
+ * @returns
+ */
 const fetchMatchingEmbeddings = async (
   userEmbedding: Tensor,
   threshold: number
@@ -90,6 +106,75 @@ const fetchMatchingEmbeddings = async (
   }
 };
 
+/**
+ * Parse csv files
+ * @param filePath 
+ * @returns 
+ */
+const parseCSVFile = (filePath: string): Promise<any[]> => {
+  return new Promise((resolve, reject) => {
+    const results: any[] = [];
+
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on("data", (data) => results.push(data))
+      .on("end", () => resolve(results))
+      .on("error", reject);
+  });
+};
+
+/**
+ * Gather csv data, convert it into processable text, and pass it into parsePdf function where text can also be parsed easily.
+ * @param embedder 
+ */
+const processCsvFiles = async (embedder: FeatureExtractionPipeline) => {
+  const Certifications = await parseCSVFile(
+    "src/utilities/csvFiles/Certifications.csv"
+  );
+  const Education = await parseCSVFile("src/utilities/csvFiles/Education.csv");
+  const Languages = await parseCSVFile("src/utilities/csvFiles/Languages.csv");
+  const Positions = await parseCSVFile("src/utilities/csvFiles/Positions.csv");
+  const Profile = await parseCSVFile("src/utilities/csvFiles/Profile.csv");
+  const Skills = await parseCSVFile("src/utilities/csvFiles/Skills.csv");
+
+  const summaryText = Profile?.[0]?.Summary || "";
+  const headline = Profile?.[0]?.Headline || "";
+  const experienceText = Positions.map(
+    (exp: any) =>
+      `${exp.Title} at ${exp["Company Name"]} from ${exp["Started On"]} to ${
+        exp["Finished On"] || "Ongoing"
+      } (${exp.Description || ""})`
+  ).join("\n");
+  const educationText = Education.map(
+    (edu: any) => `${edu["Degree Name"]} from ${edu["School Name"]}`
+  ).join("\n");
+  const skillsText = Skills.map((skill: any) => skill.Name).join(", ");
+  const coursesText = Certifications.map(
+    (course: any) =>
+      `Completed ${course.Name} course on ${course?.Authority} along with [certificate of completion](${course?.Url}).`
+  ).join("\n");
+  const languagesText = Languages.map(
+    (language: any) =>
+      `Proficient in ${language.Name} language with ${language.Proficiency}`
+  ).join("\n");
+
+  const fullText = `
+    ${headline}
+    ${summaryText}
+    Experience:\n${experienceText}
+    Education:\n${educationText}
+    Skills:\n${skillsText}
+    Courses:\n${coursesText}
+    Languages Known:\n${languagesText}
+  `
+    .trim()
+    ?.replace(
+      `Also visit my portfolio website I've developed using React JS https://sahillokhande99.netlify.app/`,
+      ""
+    );
+  await parsePdf(embedder, "text", fullText);
+};
+
 export async function POST(req: NextRequest) {
   const { prompt } = await req.json();
   const supabaseDb = await supabase.from("documents").select();
@@ -102,6 +187,7 @@ export async function POST(req: NextRequest) {
   console.log(supabaseDb?.data?.length, "supabaseDb?.data?.length");
   if (supabaseDb?.data?.length === 0) {
     // if embeddings are not already present, insert embeddings into the vector store first
+    // await processCsvFiles(embedder) // save embedded csvs into supabase
     parsePdf(embedder);
   }
 
