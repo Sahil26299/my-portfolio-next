@@ -6,8 +6,21 @@ import {
   GenericObjectInterface,
 } from "./commonInterface/commonInterfaces";
 import details from "./json/details.json";
+import {
+  embedChunksIntoVectors,
+  fetchMatchingEmbeddings,
+  parseDataIntoChunks,
+  storeVectorsIntoVectorStore,
+} from "./commonFunctions/commonFunctions";
 
-export { poppins, details };
+export {
+  poppins,
+  details,
+  embedChunksIntoVectors,
+  fetchMatchingEmbeddings,
+  parseDataIntoChunks,
+  storeVectorsIntoVectorStore,
+};
 export type {
   formSubmitEventType,
   inputChangeEventType,

@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Bot, Send, X } from "lucide-react";
+import { Bot, RefreshCcwDot, RefreshCw, Send, X } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import style from "./ChatPopover.module.css";
 import {
@@ -18,20 +18,32 @@ import {
   GenericObjectInterface,
   inputChangeEventType,
 } from "@/src/utilities";
-import { openSans, poppins } from "@/src/utilities/themes/font";
+import { poppins } from "@/src/utilities/themes/font";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import LottieAnimProvider from "../LottieProvider/LottieAnimProvider";
 import { animatedLoader } from "@/src/assets";
-import jsonData from "../../../src/utilities/json/details.json";
+import { motion } from "framer-motion";
 
 interface chatRecords {
   user: "user" | "bot";
   message: string;
   isLoading: boolean;
 }
+interface chatRecordsPropTypes extends chatRecords {
+  streaming: boolean;
+  index: number;
+  handleRegenerateResponse?: (index: number) => void;
+}
 
-const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
+const MessageComponent = ({
+  user,
+  message,
+  isLoading,
+  streaming,
+  index,
+  handleRegenerateResponse,
+}: chatRecordsPropTypes) => {
   if (user === "bot") {
     return (
       <div
@@ -45,7 +57,7 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
         <span
           className={`${
             isLoading ? "" : "bg-gradient-to-br from-blue/20 to-purple/10"
-          } text-black min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
+          } font-normal text-black min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
             style.markdownTableStyles
           }`}
         >
@@ -60,6 +72,42 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
               {message}
             </Markdown>
           )}
+          {!streaming && message?.length > 0 && (
+            <section className="w-full border-t custom-border-color mt-4 flex items-center justify-end py-2">
+              <motion.button
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                className="py-1 px-4 text-black font-medium rounded-md overflow-hidden flex items-center gap-2 cursor-pointer hover:underline transition-all duration-300"
+                style={{ position: "relative" }}
+                onClick={() =>
+                  handleRegenerateResponse && handleRegenerateResponse(index)
+                }
+              >
+                {/* Revealing Text */}
+                <motion.p
+                  variants={{
+                    rest: { opacity: 0, x: -20 },
+                    hover: { opacity: 1, x: 0 },
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="text-sm"
+                >
+                  Regenerate response ?
+                </motion.p>
+                {/* Button Label */}
+                <motion.span
+                  variants={{
+                    rest: { opacity: 1, x: -4 },
+                    hover: { opacity: 0.8, x: 0 },
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <RefreshCw size={16} />
+                </motion.span>
+              </motion.button>
+            </section>
+          )}
         </span>
       </div>
     );
@@ -68,7 +116,7 @@ const MessageComponent = ({ user, message, isLoading }: chatRecords) => {
       <div
         className={`mt-2 flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
       >
-        <span className="text-md-1 font-semibold sticky top-2 flex flex-col h-fit mt-1">
+        <span className="text-md-1 font-medium sticky top-2 flex flex-col h-fit mt-1">
           You
         </span>
         <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
@@ -86,34 +134,34 @@ const ChatPopover = () => {
   const [streaming, setStreaming] = useState(false);
   const scrollingRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (scrollingRef?.current) {
-      scrollingRef?.current.scrollTo({
-        top: scrollingRef?.current?.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [chatRecords]);
+  // useEffect(() => {
+  //   if (scrollingRef?.current) {
+  //     scrollingRef?.current.scrollTo({
+  //       top: scrollingRef?.current?.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [chatRecords]);
 
-  const handleSubmitPrompt = (ev: formSubmitEventType) => {
-    ev.preventDefault();
+  const handleSubmitPrompt = () => {
     setUserPrompt("");
     setChatRecords((prev) => [
       ...prev,
       { message: userPrompt, isLoading: false, user: "user" },
-      //   { message: "", isLoading: true, user: "bot" },
     ]);
     setTimeout(() => {
       setChatRecords((prev) => [
         ...prev,
-        //   { message: userPrompt, isLoading: false, user: "user" },
         { message: "", isLoading: true, user: "bot" },
       ]);
       submitPromptAPI(userPrompt);
     }, 1000);
   };
 
-  const submitPromptAPI = async (message: string = userPrompt) => {
+  const submitPromptAPI = async (
+    message: string = userPrompt,
+    indexWhileRegenerate?: number
+  ) => {
     try {
       const response: GenericObjectInterface = await fetch("/api/chat", {
         method: "POST",
@@ -127,7 +175,7 @@ const ChatPopover = () => {
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let result = "";
-
+      let step = 0;
       while (true) {
         setStreaming(true);
         const { done, value } = await reader.read();
@@ -136,23 +184,47 @@ const ChatPopover = () => {
         const chunk = decoder.decode(value, { stream: true });
         // Optional: parse chunk to get actual message if it's JSON line-delimited
         result += chunk;
-        console.log("Chunk:", JSON.parse(chunk)?.response); // Or update React state here
-        setChatRecords((prev) => [
-          ...prev?.slice(0, prev?.length - 1),
-          {
-            ...prev[prev?.length - 1],
-            isLoading: false,
-            message: `${prev[prev?.length - 1]?.message}${
-              JSON.parse(chunk)?.response
-            }`,
-          },
-        ]);
+        console.log("Chunk:", step, JSON.parse(chunk)?.response); // Or update React state here
+        if (indexWhileRegenerate) {
+          setChatRecords((prev) => [
+            ...prev?.slice(0, indexWhileRegenerate),
+            {
+              ...prev[indexWhileRegenerate],
+              isLoading: false,
+              message: step===0 ? JSON.parse(chunk)?.response : `${prev[indexWhileRegenerate]?.message}${
+                JSON.parse(chunk)?.response
+              }`,
+            },
+            ...prev?.slice(indexWhileRegenerate + 1),
+          ]);
+        } else {
+          setChatRecords((prev) => [
+            ...prev?.slice(0, prev?.length - 1),
+            {
+              ...prev[prev?.length - 1],
+              isLoading: false,
+              message: `${prev[prev?.length - 1]?.message}${
+                JSON.parse(chunk)?.response
+              }`,
+            },
+          ]);
+        }
+        step++;
       }
       setStreaming(false);
     } catch (error) {
     } finally {
       setStreaming(false);
     }
+  };
+
+  const handleRegenerateResponse = (index: number) => {
+    setChatRecords((prev) => [
+      ...prev?.slice(0, index),
+      { message: "", isLoading: true, user: "bot" },
+      ...prev?.slice(index + 1),
+    ]);
+    submitPromptAPI(chatRecords[index-1].message, index);
   };
 
   /**
@@ -198,7 +270,7 @@ const ChatPopover = () => {
         </TooltipContent>
       </Tooltip>
       <PopoverContent
-        className={`mr-10 h-[75svh] w-[30vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary ${openSans.className}`}
+        className={`mr-10 h-[75svh] w-[30vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary`}
       >
         <div className="h-[45px] flex flex-col border-b border-dark_grey dark:border-light_grey py-2 select-none">
           <section className="flex items-center justify-between">
@@ -223,11 +295,20 @@ const ChatPopover = () => {
           className={`flex flex-col h-full overflow-y-auto py-3 gap-1`}
         >
           {chatRecords?.map((record: chatRecords, index: number) => (
-            <MessageComponent key={index} {...record} />
+            <MessageComponent
+              key={index}
+              index={index}
+              {...record}
+              streaming={streaming}
+              handleRegenerateResponse={handleRegenerateResponse}
+            />
           ))}
         </div>
         <form
-          onSubmit={handleSubmitPrompt}
+          onSubmit={(ev: formSubmitEventType) => {
+            ev.preventDefault();
+            handleSubmitPrompt();
+          }}
           className="h-[50px] border-t border-dark_grey dark:border-light_grey flex items-center pl-2"
         >
           <input

@@ -32,7 +32,7 @@ function ProfilePage() {
             </div>{" "}
             <span className="text-white lg:text-md-1 md:text-sm sm:text-md-1 text-sm">Pune, India</span>
           </a>
-          <section className="flex flex-col gap-2 px-3">
+          <section className="flex flex-col md:text-left md:items-start items-center text-center gap-2 px-3">
             <section className="custom-text-secondary font-medium flex items-center gap-2 lg:text-md-1 sm:text-sm text-[11px] border-b border-light_grey max-w-fit">
               <motion.a
                 initial={{ opacity: 0, y: 3 }}
@@ -77,7 +77,7 @@ function ProfilePage() {
       </section>
       <section className="flex flex-col items-center p-8 gap-24">
         <section id="skills" className="w-3/5 flex flex-col items-center py-10">
-          <h4 className="text-lg font-semibold custom-text-primary">
+          <h4 className="text-lg font-semibold custom-text-primary text-center">
             My Skills & Expertise
           </h4>
           <span className="custom-text-secondary text-center text-md-1">

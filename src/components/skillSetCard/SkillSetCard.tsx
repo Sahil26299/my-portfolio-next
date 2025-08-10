@@ -92,7 +92,7 @@ export default function SkillSetCards() {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-8"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-[240px] mt-8"
     >
       {details.skills.map((skill) => (
         <motion.div
@@ -105,7 +105,7 @@ export default function SkillSetCards() {
           className="select-none"
           whileTap={{ scale: 0.98 }}
         >
-          <Card className="h-full secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
+          <Card className="h-full min-w-[240px] secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className={`p-2 rounded-lg ${skill.color} text-white`}>
