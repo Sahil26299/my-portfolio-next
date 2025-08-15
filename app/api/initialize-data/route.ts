@@ -84,7 +84,9 @@ const processCsvFiles = async () => {
         ""
       );
     return fullText;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const initializeAllDataAtOnce = async (embedder: FeatureExtractionPipeline) => {

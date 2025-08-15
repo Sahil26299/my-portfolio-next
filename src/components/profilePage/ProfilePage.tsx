@@ -94,7 +94,7 @@ function ProfilePage() {
             Professional Experience
           </h4>
           <span className="custom-text-secondary text-center text-md-1">
-            My journey through different companies, the impact I've made, and
+            My journey through different companies, the impact I´ve made, and
             how each experience has shaped my professional growth
           </span>
           <ExperienceSection />

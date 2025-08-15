@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -35,7 +35,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants: any = {
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 20,

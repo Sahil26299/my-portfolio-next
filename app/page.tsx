@@ -7,13 +7,13 @@ import Navbar from "@/src/components/navbar/Navbar";
 import ProfilePage from "@/src/components/profilePage/ProfilePage";
 import Footer from "@/src/components/footer/Footer";
 
-export default function page() {
+export default function Page() {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    handleFetchData()
+    handleFetchData();
   }, []);
   useEffect(() => {
     const handleMouseUp = () => {
@@ -42,11 +42,12 @@ export default function page() {
       });
       const jsonResponse = await response.json();
       // const parsedResponse = JSON.parse(response);
-      console.log(jsonResponse,'jsonResponse');
-      if(jsonResponse?.status === 200 && jsonResponse?.data?.length === 0){
-
+      console.log(jsonResponse, "jsonResponse");
+      if (jsonResponse?.status === 200 && jsonResponse?.data?.length === 0) {
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleToggleSidebar = useCallback((value: boolean) => {

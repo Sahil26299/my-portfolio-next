@@ -1,5 +1,5 @@
 // import { Dayjs } from "dayjs";
-import React, { SyntheticEvent } from "react";
+import React from "react";
 /**
  * Form and Input events
  */

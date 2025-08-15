@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import "./TypeWriterStyles.css";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ArrayOfStringType } from "@/src/utilities";
 /**
  * Interface of Typewriter UI component
  */
@@ -18,46 +19,47 @@ function TypeWriterUI({
   handleAnimationFinished,
   textClass = "text-md",
 }: TypeWriterUIPropTypes) {
-  const [currentText, setCurrentText] = useState("");
+  const [currentText, setCurrentText] = useState<ArrayOfStringType>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showCursor, setShowCursor] = useState(false);
-  // const chatCursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (useTypeWriter) {
-      if (currentIndex < botResponse.length) {
-        setShowCursor(true);
+      const botResponseArray = botResponse?.split(" ");
+      if (currentIndex < botResponseArray.length) {
         const timeout = setTimeout(() => {
-          setCurrentText((prevText) => prevText + botResponse[currentIndex]);
+          setCurrentText((prev) => [...prev, botResponseArray[currentIndex]]);
           setCurrentIndex((prevIndex) => prevIndex + 1);
-          // if (chatCursorRef.current) {
-          //   chatCursorRef.current.scrollIntoView({ behavior: "smooth" });
-          // }
         }, delay);
 
         return () => clearTimeout(timeout);
       } else {
         setTimeout(() => {
-          handleAnimationFinished && handleAnimationFinished();
-          setShowCursor(false);
-        }, 1000);
+          if (handleAnimationFinished) {
+            handleAnimationFinished();
+          }
+        }, 250);
       }
-    } else {
-      setCurrentText(botResponse);
     }
-  }, [currentIndex, delay, botResponse]);
+  }, [
+    handleAnimationFinished,
+    useTypeWriter,
+    currentIndex,
+    delay,
+    botResponse,
+  ]);
   return (
     <>
       <span className={textClass}>
-        {currentText}
-        {showCursor && (
-          <span
-            // ref={chatCursorRef}
-            className={`cursorAnimation text-md-1 font-md`}
+        {currentText?.map((el, ind) => (
+          <motion.span
+            key={`${el}-${ind}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
           >
-            |
-          </span>
-        )}
+            {el}{" "}
+          </motion.span>
+        ))}
       </span>
     </>
   );

@@ -27,14 +27,19 @@ function chunkText(
  * @param embedder embedder tool used to embed chunks into vectors
  * @param chunk piece of text
  */
-export async function embedChunks(embedder: FeatureExtractionPipeline, chunk: string) {
+export async function embedChunks(
+  embedder: FeatureExtractionPipeline,
+  chunk: string
+) {
   try {
     const vectorResponse = await embedder(chunk, {
       pooling: "mean",
       normalize: true,
     });
     return vectorResponse;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 /**
@@ -88,7 +93,9 @@ export async function storeVectorsIntoVectorStore(
         embedding: Array.from(dataEmbeddings[i]),
       });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 /**
