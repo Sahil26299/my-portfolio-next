@@ -22,6 +22,7 @@ import {
   TabletSmartphone,
   Container,
   Github,
+  Quote,
 } from "lucide-react";
 import {
   details,
@@ -222,9 +223,10 @@ export default function SkillSetCards() {
             <ContextMenuItem
               onClick={() => handleAskAssistant(skill.prompt)}
               disabled={disablePrompts}
-              className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer"
+              className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer md:w-full w-[240px]"
             >
-              Ask more about {skill.name}({skill.category}) to assistant? {disablePrompts ? "Sorry your limit reached!" : ""}
+              <Quote size={16} className="text-purple" /> Ask more about {skill.name}({skill.category}) to assistant?{" "}
+              {disablePrompts ? "Sorry your limit reached!" : ""}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>

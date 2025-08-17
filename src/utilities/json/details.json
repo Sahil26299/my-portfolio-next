@@ -113,6 +113,7 @@
       "duration": "2 Years",
       "period": "Sept 2023 - Present",
       "location": "Pune, India",
+      "prompt": "Write a detailed summary on Sahil's experience at Pyrack, kind of tools he worked on, experience he gained and for how long he's been working for Pyrack.",
       "companyType": "AI Startup",
       "description": "Leading development of enterprise-grade web applications and mentoring junior developers in a fast-paced startup environment.",
       "responsibilities": [
@@ -156,6 +157,7 @@
       "period": "April 2022 - June 2023",
       "location": "Pune, India",
       "companyType": "IT Services & Consulting",
+      "prompt": "Write a detailed summary on Sahil's experience at Mobiloitte, kind of tools he worked on, experience he gained and for how long worked for Mobiloitte.",
       "description": "Developed responsive mobile applications for diverse clients ranging from startups to large scale MNCs.",
       "responsibilities": [
         "Built 6+ client mobile applications using React Native and modern its modern tools like Redux Toolkit (RTK), Firebase and Payment gateways",

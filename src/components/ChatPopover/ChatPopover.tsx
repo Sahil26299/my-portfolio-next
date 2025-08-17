@@ -82,7 +82,7 @@ const MessageComponent = ({
                 : isError
                 ? "bg-red-50 text-red"
                 : "bg-gradient-to-br from-blue/20 to-purple/10"
-            } font-normal text-black min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
+            } font-normal custom-text-primary-converse min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
               style.markdownTableStyles
             }`}
           >
@@ -111,11 +111,11 @@ const MessageComponent = ({
                   initial="rest"
                   whileHover="hover"
                   animate="rest"
-                  className={`px-4 text-black font-medium rounded-md overflow-hidden flex items-center gap-2 ${
+                  className={`px-4 font-medium rounded-md overflow-hidden flex items-center gap-2 ${
                     streaming || chatsTillNow === chatLimit
                       ? "cursor-not-allowed"
                       : "cursor-pointer"
-                  } hover:underline transition-all duration-300`}
+                  } hover:underline transition-all duration-300 custom-text-primary-converse`}
                   style={{ position: "relative" }}
                   onClick={() =>
                     handleRegenerateResponse && handleRegenerateResponse(index)
@@ -467,7 +467,7 @@ const ChatPopover = ({
         className={`sm:mr-10 mr-5 h-[80svh] sm:w-[34vw] w-[90vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary`}
       >
         <div className="h-[45px] flex flex-col border-b border-dark_grey dark:border-light_grey py-2 select-none">
-          <section className="flex items-center justify-between">
+          <section className="flex items-center justify-between pr-2">
             <section className="flex items-center gap-2">
               <Bot size={24} className="text-blue" />
               <h4 className="font-semibold custom-text-primary-converse">
@@ -478,12 +478,12 @@ const ChatPopover = ({
               </h4>
             </section>
             <Button
-              size={"icon"}
-              className="h-[25px] w-[25px] custom-text-primary-converse"
+              // size={"icon"}
+              className="h-[25px] px-2 border custom-border-color custom-text-primary-converse"
               variant={"ghost"}
               onClick={() => handleUpdateOpenChatPopover(false)}
             >
-              <X size={18} />
+              <X size={18} /><sub>(ESC)</sub>
             </Button>
           </section>
         </div>

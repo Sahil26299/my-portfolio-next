@@ -18,6 +18,7 @@ export default function GradientButton({
   const handleDownload = () => {
     // Create a temporary link element to trigger download
     const link = document.createElement("a")
+    link.target="_blank"
     link.href = fileUrl
     link.download = fileName
     document.body.appendChild(link)

@@ -8,6 +8,8 @@ import ExperienceSection from "../experienceSet/ExperienceSet";
 import GradientButton from "../gradientButton/GradientButton";
 import dayjs from "dayjs";
 import { details } from "@/src/utilities";
+import { Lightbulb } from "lucide-react";
+import { isMobile } from "react-device-detect";
 
 function ProfilePage() {
   return (
@@ -30,11 +32,14 @@ function ProfilePage() {
             <div className="w-2 h-2 bg-green-400 rounded-full">
               <div className="w-2 h-2 bg-green-400 rounded-full group-hover:animate-ping" />
             </div>{" "}
-            <span className="text-white lg:text-md-1 md:text-sm sm:text-md-1 text-sm">Pune, India</span>
+            <span className="text-white lg:text-md-1 md:text-sm sm:text-md-1 text-sm">
+              Pune, India
+            </span>
           </a>
           <section className="flex flex-col md:text-left md:items-start items-center text-center gap-2 px-3">
             <section className="custom-text-secondary font-medium flex items-center gap-2 lg:text-md-1 sm:text-sm text-[11px] border-b border-light_grey max-w-fit">
               <motion.a
+                target="_blank"
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
@@ -44,6 +49,7 @@ function ProfilePage() {
               </motion.a>{" "}
               •{" "}
               <motion.a
+                target="_blank"
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 }}
@@ -53,6 +59,7 @@ function ProfilePage() {
               </motion.a>{" "}
               •{" "}
               <motion.a
+                target="_blank"
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.6 }}
@@ -70,19 +77,30 @@ function ProfilePage() {
               textClass="uppercase italic custom-text-secondary font-medium lg:text-md text-md-1"
             />
             <section className="flex items-center gap-2 mt-2">
-              <GradientButton  />
+              <GradientButton />
             </section>
           </section>
         </section>
       </section>
       <section className="flex flex-col items-center p-8 gap-24">
-        <section id="skills" className="lg:w-3/5 w-4/5 flex flex-col items-center py-10">
+        <section
+          id="skills"
+          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
+        >
           <h4 className="text-lg font-semibold custom-text-primary text-center">
             My Skills & Expertise
           </h4>
           <span className="custom-text-secondary text-center text-md-1">
             A comprehensive overview of my technical skills, proficiency levels,
             and hands-on experience
+          </span>
+          <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
+            <Lightbulb size={16} className="text-yellow-400 animate-pulse" />
+            Tip:{" "}
+            {isMobile
+              ? `Tap and hold (or right click for PC)`
+              : `Right click (or tap and hold if using mobile)`}{" "}
+            on any skill card to know more about it.
           </span>
           <SkillSetCards />
         </section>
@@ -96,6 +114,14 @@ function ProfilePage() {
           <span className="custom-text-secondary text-center text-md-1">
             My journey through different companies, the impact I´ve made, and
             how each experience has shaped my professional growth
+          </span>
+          <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
+            <Lightbulb size={16} className="text-yellow-400 animate-pulse" />
+            Tip:{" "}
+            {isMobile
+              ? `Tap and hold (or right click for PC)`
+              : `Right click (or tap and hold if using mobile)`}{" "}
+            on any experience card to know more about it.
           </span>
           <ExperienceSection />
         </section>

@@ -41,7 +41,7 @@ export default function Navbar() {
           </NavigationMenuTrigger>
           <NavigationMenuContent className="bg-bg-secondary dark:bg-bg-secondary-dark custom-border-color">
             <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0 ">
-              <li className="row-span-3 border-r custom-border-color">
+              <li className="row-span-3 lg:border-r lg:custom-border-color">
                 <NavigationMenuLink asChild>
                   <div className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md">
                     <section className="mx-2 text-md font-medium flex flex-col gap-2 items-center">
@@ -59,6 +59,7 @@ export default function Navbar() {
                       <a
                         className="h-5 w-5"
                         download={true}
+                        target="_blank"
                         href="http://localhost:3000/files/sahilLokhandeCV.pdf"
                       >
                         <Download size={16} />

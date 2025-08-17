@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         After the greeting, always append the following message (and only this message):
         “If you have any questions, please reach out to Sahil at 📩${
           jsonData.email
-        } or 📲${jsonData.phone}. You can also connect on 🔗LinkedIn.” 
+        } or 📲${jsonData.phone}. You can also connect on 🔗[LinkedIn](${jsonData.linkedin}).” 
       
       **Greetings (hi, hello, good morning, thanks, etc.)** → Reply briefly with a polite greeting (for eg. For greetings like Hi or Hello or Hey etc, reply with similar words politely; for greetings like good morning, good afternoon, good afternoon or good night, reply with appropriate words based on current time mentioned above; for words like thanks or thank you etc, please reply with welcome in a polite way) **and only**:
           “If you have any questions, please reach out to Sahil at 📩[${

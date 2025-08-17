@@ -144,11 +144,7 @@ export default function Footer() {
                 <motion.a
                   key={social.name}
                   href={social.url}
-                  target={
-                    social.name !== "Email" && social.name !== "Phone"
-                      ? "_blank"
-                      : undefined
-                  }
+                  target={"_blank"}
                   rel={
                     social.name !== "Email" && social.name !== "Phone"
                       ? "noopener noreferrer"
