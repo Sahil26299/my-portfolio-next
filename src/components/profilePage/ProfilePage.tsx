@@ -98,7 +98,7 @@ function ProfilePage() {
             <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
             <u>Tip:</u>{" "}
             {isMobile
-              ? `Tap and hold (or right click for PC)`
+              ? `Tap and hold (or R. Click while on PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
             on any skill card to know more about it.
           </span>
@@ -119,7 +119,7 @@ function ProfilePage() {
             <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
             <u>Tip:</u>{" "}
             {isMobile
-              ? `Tap and hold (or right click for PC)`
+              ? `Tap and hold (or R. Click while on PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
             on any experience card to know more about it.
           </span>
