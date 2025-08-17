@@ -27,6 +27,7 @@ import {
   inputChangeEventType,
   keys,
   removeSessionStorageItem,
+  setSessionStorageItem,
 } from "@/src/utilities";
 import { poppins } from "@/src/utilities/themes/font";
 import Markdown from "react-markdown";
@@ -47,7 +48,7 @@ interface chatRecordsPropTypes extends chatRecords {
   chatsTillNow: number;
 }
 
-const chatLimit = 10;
+export const chatLimit = 10;
 
 const MessageComponent = ({
   user,
@@ -212,6 +213,7 @@ const ChatPopover = ({
   const [followUpQuestions, setFollowUpQuestions] = useState<ArrayOfStringType>(
     []
   );
+  const [regenrateResponseChances, setRegenrateResponseChances] = useState(0);
   const [showFollowUpQuestions, setShowFollowUpQuestions] = useState(false);
   const scrollingRef = useRef<HTMLDivElement | null>(null);
 
@@ -248,6 +250,16 @@ const ChatPopover = ({
       });
     }
   };
+
+  const chatsTillNow = useMemo(() => {
+    const result =
+      Math.ceil((chatRecords?.length - 1) / 2) + regenrateResponseChances;
+    return result;
+  }, [chatRecords, regenrateResponseChances]);
+
+  useEffect(() => {
+    setSessionStorageItem(keys.CURRENT_CHATS_DONE, chatsTillNow);
+  }, [chatsTillNow]);
 
   useEffect(() => {
     if (openChatPopover && chatRecords?.length === 0) {
@@ -387,7 +399,7 @@ const ChatPopover = ({
 
   const handleRegenerateResponse = (index: number) => {
     setShowFollowUpQuestions(false);
-
+    setRegenrateResponseChances((prev) => prev + 1);
     const dummyChatRecords: chatRecords[] = [
       ...chatRecords?.slice(0, index),
       { message: "", isLoading: true, user: "bot", isError: false },
@@ -416,11 +428,6 @@ const ChatPopover = ({
       streamingIndex !== -1
     );
   }, [chatRecords, streamingIndex, userPrompt]);
-
-  const chatsTillNow = useMemo(() => {
-    console.log(chatRecords, "chatRecords");
-    return Math.ceil((chatRecords?.length - 1) / 2);
-  }, [chatRecords]);
 
   return (
     <Popover open={openChatPopover}>

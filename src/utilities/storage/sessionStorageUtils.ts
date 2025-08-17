@@ -1,9 +1,11 @@
 interface keysType {
   SUBMIT_USER_PROMPT_FROM_OUTSIDE: string;
+  CURRENT_CHATS_DONE: string;
 }
 
 export const keys: keysType = {
   SUBMIT_USER_PROMPT_FROM_OUTSIDE: "submit_user_prompt_from_skills",
+  CURRENT_CHATS_DONE: "current_chats_done",
 };
 
 // Function to set a value in sessionStorage

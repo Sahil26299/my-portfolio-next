@@ -23,13 +23,20 @@ import {
   Container,
   Github,
 } from "lucide-react";
-import { details, keys, setSessionStorageItem } from "@/src/utilities";
+import {
+  details,
+  getSessionStorageItem,
+  keys,
+  setSessionStorageItem,
+} from "@/src/utilities";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { useEffect, useState } from "react";
+import { chatLimit } from "../ChatPopover/ChatPopover";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -93,9 +100,25 @@ const getProficiencyColor = (proficiency: number) => {
 };
 
 export default function SkillSetCards() {
-  const handleAskAssistant = (prompt:string) => {
-    setSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE, {from: "skills", prompt})
-  }
+  const [disablePrompts, setDisablePrompts] = useState(false);
+  useEffect(() => {
+    const handleSessionChange = () => {
+      const currentChatCount = getSessionStorageItem(keys.CURRENT_CHATS_DONE);
+      setDisablePrompts(currentChatCount === chatLimit);
+    };
+    window.addEventListener("sessionStorageUpdated", handleSessionChange);
+
+    return () => {
+      window.removeEventListener("sessionStorageUpdated", handleSessionChange);
+    };
+  }, []);
+
+  const handleAskAssistant = (prompt: string) => {
+    setSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE, {
+      from: "skills",
+      prompt,
+    });
+  };
   return (
     <motion.div
       variants={containerVariants}
@@ -104,7 +127,7 @@ export default function SkillSetCards() {
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-[240px] mt-8"
     >
       {details.skills.map((skill) => (
-        <ContextMenu key={skill.id} >
+        <ContextMenu key={skill.id}>
           <ContextMenuTrigger>
             <motion.div
               variants={cardVariants}
@@ -195,8 +218,14 @@ export default function SkillSetCards() {
               </Card>
             </motion.div>
           </ContextMenuTrigger>
-          <ContextMenuContent className="border-none secondary-background-converse" >
-            <ContextMenuItem onClick={()=>handleAskAssistant(skill.prompt)} className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer" >Ask more about {skill.name}({skill.category}) to assistant?</ContextMenuItem>
+          <ContextMenuContent className="border-none secondary-background-converse">
+            <ContextMenuItem
+              onClick={() => handleAskAssistant(skill.prompt)}
+              disabled={disablePrompts}
+              className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer"
+            >
+              Ask more about {skill.name}({skill.category}) to assistant? {disablePrompts ? "Sorry your limit reached!" : ""}
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       ))}
