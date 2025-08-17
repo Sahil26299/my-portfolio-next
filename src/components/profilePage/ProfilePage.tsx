@@ -95,7 +95,7 @@ function ProfilePage() {
             and hands-on experience
           </span>
           <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
-            <Lightbulb size={16} className="text-yellow-400 animate-pulse" />
+            <Lightbulb size={16} className="text-yellow-500 animate-pulse" />
             Tip:{" "}
             {isMobile
               ? `Tap and hold (or right click for PC)`
@@ -116,7 +116,7 @@ function ProfilePage() {
             how each experience has shaped my professional growth
           </span>
           <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
-            <Lightbulb size={16} className="text-yellow-400 animate-pulse" />
+            <Lightbulb size={16} className="text-yellow-500 animate-pulse" />
             Tip:{" "}
             {isMobile
               ? `Tap and hold (or right click for PC)`
