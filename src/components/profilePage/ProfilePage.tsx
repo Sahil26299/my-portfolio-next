@@ -94,9 +94,9 @@ function ProfilePage() {
             A comprehensive overview of my technical skills, proficiency levels,
             and hands-on experience
           </span>
-          <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
-            <Lightbulb size={16} className="text-yellow-500 animate-pulse" />
-            Tip:{" "}
+          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+            <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
+            <u>Tip:</u>{" "}
             {isMobile
               ? `Tap and hold (or right click for PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
@@ -115,9 +115,9 @@ function ProfilePage() {
             My journey through different companies, the impact I´ve made, and
             how each experience has shaped my professional growth
           </span>
-          <span className="custom-text-secondary text-center text-md-1 flex items-center gap-1">
-            <Lightbulb size={16} className="text-yellow-500 animate-pulse" />
-            Tip:{" "}
+          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+            <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
+            <u>Tip:</u>{" "}
             {isMobile
               ? `Tap and hold (or right click for PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
