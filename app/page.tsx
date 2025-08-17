@@ -2,14 +2,18 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import ChatPopover from "@/src/components/ChatPopover/ChatPopover";
 import { ThemeProvider } from "@/src/components/hoc/ThemeProvider";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Navbar from "@/src/components/navbar/Navbar";
 import ProfilePage from "@/src/components/profilePage/ProfilePage";
 import Footer from "@/src/components/footer/Footer";
+import { chatRecords, getSessionStorageItem, keys } from "@/src/utilities";
 
 export default function Page() {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [openChatPopover, setOpenChatPopover] = useState(false);
+  const [userPrompt, setUserPrompt] = useState("");
+  const [chatRecords, setChatRecords] = useState<chatRecords[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -50,25 +54,49 @@ export default function Page() {
     }
   };
 
-  const handleToggleSidebar = useCallback((value: boolean) => {
-    setOpenSideBar(value);
-  }, []);
+  const chatListmemoized = useMemo(() => {
+    return [...chatRecords];
+  }, [chatRecords]);
+
+  const handleUpdateChatRecords = useCallback(
+    (newValue: chatRecords[]) => {
+      setChatRecords(newValue);
+    },
+    [chatRecords, userPrompt]
+  );
+  const handleUpdateOpenChatPopover = useCallback(
+    (newValue: boolean) => {
+      setOpenChatPopover(newValue);
+    },
+    [chatRecords]
+  );
+  const handleUpdateUserPrompt = useCallback(
+    (newValue: string) => {
+      setUserPrompt(newValue);
+    },
+    [chatRecords]
+  );
 
   if (!mounted) {
     return null; // Or render a loading skeleton
   }
+
   return (
     <ThemeProvider attribute={"class"} defaultTheme="dark">
       <SidebarProvider className="primary-background" open={openSideBar}>
-        {/* <SidebarComponent
-          handleToggleSidebar={handleToggleSidebar}
-          sidebarState={openSideBar}
-        /> */}
-        <main className="w-full relative">
-          {/* <DragComponent className="absolute top-40 left-20 z-0" /> */}
-          <Navbar />
-          <ProfilePage />
-          <ChatPopover />
+        <main className="w-full">
+          <section className="relative">
+            <Navbar />
+            <ProfilePage />
+            <ChatPopover
+              openChatPopover={openChatPopover}
+              userPrompt={userPrompt}
+              chatRecords={chatListmemoized}
+              handleUpdateChatRecords={handleUpdateChatRecords}
+              handleUpdateOpenChatPopover={handleUpdateOpenChatPopover}
+              handleUpdateUserPrompt={handleUpdateUserPrompt}
+            />
+          </section>
           <Footer />
         </main>
       </SidebarProvider>

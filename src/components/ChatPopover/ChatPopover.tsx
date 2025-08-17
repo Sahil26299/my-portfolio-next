@@ -21,8 +21,12 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   ArrayOfStringType,
+  chatRecords,
   formSubmitEventType,
+  getSessionStorageItem,
   inputChangeEventType,
+  keys,
+  removeSessionStorageItem,
 } from "@/src/utilities";
 import { poppins } from "@/src/utilities/themes/font";
 import Markdown from "react-markdown";
@@ -32,12 +36,6 @@ import { animatedLoader } from "@/src/assets";
 import { motion } from "framer-motion";
 import TypeWriterUI from "../TypeWriterUI/TypeWriterUI";
 
-interface chatRecords {
-  user: "user" | "bot";
-  message: string;
-  isLoading: boolean;
-  isError: boolean;
-}
 interface chatRecordsPropTypes extends chatRecords {
   streaming: boolean;
   index: number;
@@ -46,7 +44,10 @@ interface chatRecordsPropTypes extends chatRecords {
   handleStopStreaming: () => void;
   handleRegenerateResponse?: (index: number) => void;
   handleSubmitMessage: (msg: string) => void;
+  chatsTillNow: number;
 }
+
+const chatLimit = 10;
 
 const MessageComponent = ({
   user,
@@ -60,6 +61,7 @@ const MessageComponent = ({
   handleRegenerateResponse,
   handleStopStreaming,
   handleSubmitMessage,
+  chatsTillNow,
 }: chatRecordsPropTypes) => {
   if (user === "bot") {
     return (
@@ -104,11 +106,15 @@ const MessageComponent = ({
             {index !== 0 && message?.length > 0 && (
               <section className="w-full border-t custom-border-color mt-4 flex items-center justify-end py-2">
                 <motion.button
-                  disabled={streaming}
+                  disabled={streaming || chatsTillNow === chatLimit}
                   initial="rest"
                   whileHover="hover"
                   animate="rest"
-                  className="px-4 text-black font-medium rounded-md overflow-hidden flex items-center gap-2 cursor-pointer hover:underline transition-all duration-300"
+                  className={`px-4 text-black font-medium rounded-md overflow-hidden flex items-center gap-2 ${
+                    streaming || chatsTillNow === chatLimit
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                  } hover:underline transition-all duration-300`}
                   style={{ position: "relative" }}
                   onClick={() =>
                     handleRegenerateResponse && handleRegenerateResponse(index)
@@ -150,8 +156,13 @@ const MessageComponent = ({
               {followUpQuestions?.map((el, ind) => {
                 return (
                   <motion.button
+                    disabled={chatsTillNow === chatLimit}
                     key={el}
-                    className="px-1 text-left rounded-md text-md-1 text-black cursor-pointer my-[2px]"
+                    className={`px-1 text-left rounded-md text-md-1 text-black ${
+                      chatsTillNow === chatLimit
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    } my-[2px]`}
                     initial={{ opacity: 0, y: 3 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 * (ind + 1) }}
@@ -181,16 +192,53 @@ const MessageComponent = ({
   }
 };
 
-const ChatPopover = () => {
-  const [openChatPopover, setOpenChatPopover] = useState(false);
-  const [userPrompt, setUserPrompt] = useState("");
-  const [chatRecords, setChatRecords] = useState<chatRecords[]>([]);
+interface ChatPopoverProps {
+  openChatPopover: boolean;
+  userPrompt: string;
+  chatRecords: chatRecords[];
+  handleUpdateOpenChatPopover: (param: boolean) => void;
+  handleUpdateUserPrompt: (param: string) => void;
+  handleUpdateChatRecords: (param: chatRecords[]) => void;
+}
+const ChatPopover = ({
+  openChatPopover,
+  userPrompt,
+  chatRecords,
+  handleUpdateChatRecords,
+  handleUpdateOpenChatPopover,
+  handleUpdateUserPrompt,
+}: ChatPopoverProps) => {
   const [streamingIndex, setStreamingIndex] = useState(-1);
   const [followUpQuestions, setFollowUpQuestions] = useState<ArrayOfStringType>(
     []
   );
   const [showFollowUpQuestions, setShowFollowUpQuestions] = useState(false);
   const scrollingRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleSessionChange = () => {
+      const updatedValue = getSessionStorageItem(
+        keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE
+      );
+      if (updatedValue?.from && updatedValue?.prompt !== "") {
+        handleUpdateOpenChatPopover(true);
+        handleSubmitPrompt(updatedValue?.prompt);
+      }
+    };
+
+    const handleKeyDown = (ev: any) => {
+      if (ev?.key === "Escape") {
+        handleUpdateOpenChatPopover(false);
+      }
+    };
+
+    window.addEventListener("sessionStorageUpdated", handleSessionChange);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("sessionStorageUpdated", handleSessionChange);
+    };
+  }, [chatRecords]);
 
   const handleScrollToBottom = () => {
     if (scrollingRef?.current) {
@@ -203,7 +251,7 @@ const ChatPopover = () => {
 
   useEffect(() => {
     if (openChatPopover && chatRecords?.length === 0) {
-      setChatRecords([
+      handleUpdateChatRecords([
         {
           message: `👋 Hi there! I’m your friendly AI assistant here to help you know more about Sahil’s work and experience as a Software developer. Ask me anything about his skills, projects, past experiences or professional journey!`,
           isLoading: false,
@@ -232,27 +280,32 @@ const ChatPopover = () => {
   const onManualSubmit = () => {
     handleSubmitPrompt(userPrompt);
   };
-  const handleSubmitPrompt = useCallback((prompt: string) => {
-    if (!prompt.trim()) return;
+  const handleSubmitPrompt = useCallback(
+    (prompt: string) => {
+      if (!prompt.trim()) return;
+      removeSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE);
+      setShowFollowUpQuestions(false);
+      handleUpdateUserPrompt("");
 
-    setShowFollowUpQuestions(false);
-    setUserPrompt("");
+      const dummyChatRecords: chatRecords[] = [
+        ...chatRecords,
+        { message: prompt, isLoading: false, user: "user", isError: false },
+        { message: "", isLoading: true, user: "bot", isError: false },
+      ];
+      // Add user message + bot placeholder in one atomic update
+      handleUpdateChatRecords(dummyChatRecords);
 
-    // Add user message + bot placeholder in one atomic update
-    setChatRecords((prev) => [
-      ...prev,
-      { message: prompt, isLoading: false, user: "user", isError: false },
-      { message: "", isLoading: true, user: "bot", isError: false },
-    ]);
+      handleScrollToBottom();
 
-    handleScrollToBottom();
-
-    // API call
-    submitPromptAPI(prompt);
-  }, []);
+      // API call
+      submitPromptAPI(prompt, dummyChatRecords);
+    },
+    [chatRecords]
+  );
 
   const submitPromptAPI = async (
     message: string = userPrompt,
+    dummyChatRecords: chatRecords[] = [...chatRecords],
     indexWhileRegenerate?: number
   ) => {
     try {
@@ -270,63 +323,58 @@ const ChatPopover = () => {
       // console.log(jsonResponse, "jsonResponse?.data?.message");
       if (jsonResponse?.success) {
         if (indexWhileRegenerate) {
-          setChatRecords((prev) => [
-            ...prev?.slice(0, indexWhileRegenerate),
+          handleUpdateChatRecords([
+            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
             {
-              ...prev[indexWhileRegenerate],
+              ...dummyChatRecords[indexWhileRegenerate],
               isLoading: false,
               message: jsonResponse?.data?.message,
               isError: false,
             },
-            ...prev?.slice(indexWhileRegenerate + 1),
+            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
           ]);
           setStreamingIndex(indexWhileRegenerate);
         } else {
-          let lastIndex = -1;
-          setChatRecords((prev) => {
-            lastIndex = prev?.length - 1;
-            return [
-              ...prev?.slice(0, lastIndex),
-              {
-                ...prev[lastIndex],
-                isLoading: false,
-                message: jsonResponse?.data?.message,
-                isError: false,
-              },
-            ];
-          });
+          const lastIndex = dummyChatRecords?.length - 1;
+          const result = [
+            ...dummyChatRecords?.slice(0, lastIndex),
+            {
+              ...dummyChatRecords[lastIndex],
+              isLoading: false,
+              message: jsonResponse?.data?.message,
+              isError: false,
+            },
+          ];
+          handleUpdateChatRecords(result);
           setStreamingIndex(lastIndex);
           handleScrollToBottom();
         }
       } else if (jsonResponse?.error?.status === 429) {
         if (indexWhileRegenerate) {
-          setChatRecords((prev) => [
-            ...prev?.slice(0, indexWhileRegenerate),
+          handleUpdateChatRecords([
+            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
             {
-              ...prev[indexWhileRegenerate],
+              ...dummyChatRecords[indexWhileRegenerate],
               isLoading: false,
               message:
                 "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
               isError: true,
             },
-            ...prev?.slice(indexWhileRegenerate + 1),
+            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
           ]);
           setStreamingIndex(indexWhileRegenerate);
         } else {
-          let lastIndex = -1;
-          setChatRecords((prev) => {
-            lastIndex = prev?.length - 1;
-            return [
-              ...prev?.slice(0, lastIndex),
-              {
-                ...prev[lastIndex],
-                isLoading: false,
-                message:
-                  "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
-                isError: true,
-              },
-            ];
-          });
+          const lastIndex = dummyChatRecords?.length - 1;
+          handleUpdateChatRecords([
+            ...dummyChatRecords?.slice(0, lastIndex),
+            {
+              ...dummyChatRecords[lastIndex],
+              isLoading: false,
+              message:
+                "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
+              isError: true,
+            },
+          ]);
           setStreamingIndex(lastIndex);
           handleScrollToBottom();
         }
@@ -339,12 +387,15 @@ const ChatPopover = () => {
 
   const handleRegenerateResponse = (index: number) => {
     setShowFollowUpQuestions(false);
-    setChatRecords((prev) => [
-      ...prev?.slice(0, index),
+
+    const dummyChatRecords: chatRecords[] = [
+      ...chatRecords?.slice(0, index),
       { message: "", isLoading: true, user: "bot", isError: false },
-      ...prev?.slice(index + 1),
-    ]);
-    submitPromptAPI(chatRecords[index - 1].message, index);
+      ...chatRecords?.slice(index + 1),
+    ];
+
+    handleUpdateChatRecords(dummyChatRecords);
+    submitPromptAPI(chatRecords[index - 1].message, dummyChatRecords, index);
   };
 
   const handleStopStreaming = useCallback(() => {
@@ -366,11 +417,22 @@ const ChatPopover = () => {
     );
   }, [chatRecords, streamingIndex, userPrompt]);
 
+  const chatsTillNow = useMemo(() => {
+    console.log(chatRecords, "chatRecords");
+    return Math.ceil((chatRecords?.length - 1) / 2);
+  }, [chatRecords]);
+
   return (
-    <Popover open={openChatPopover} onOpenChange={setOpenChatPopover}>
+    <Popover open={openChatPopover}>
       <Tooltip defaultOpen open={openChatPopover ? false : undefined}>
         <TooltipTrigger asChild>
-          <PopoverTrigger className="fixed bottom-10 right-10 cursor-pointer">
+          <PopoverTrigger
+            onClick={(ev) => {
+              ev.preventDefault();
+              handleUpdateOpenChatPopover(!openChatPopover);
+            }}
+            className="sticky bottom-[3%] sm:left-[95%] left-[80%] cursor-pointer"
+          >
             <div className="border-b border-r border-blue pt-px pl-px relative">
               <Bot
                 size={56}
@@ -395,21 +457,24 @@ const ChatPopover = () => {
         </TooltipContent>
       </Tooltip>
       <PopoverContent
-        className={`mr-10 h-[80svh] w-[34vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary`}
+        className={`sm:mr-10 mr-5 h-[80svh] sm:w-[34vw] w-[90vw] min-w-[350px] px-2 py-1 flex flex-col bg-bg-primary-dark dark:bg-bg-primary`}
       >
         <div className="h-[45px] flex flex-col border-b border-dark_grey dark:border-light_grey py-2 select-none">
           <section className="flex items-center justify-between">
             <section className="flex items-center gap-2">
               <Bot size={24} className="text-blue" />
               <h4 className="font-semibold custom-text-primary-converse">
-                Ask Assistant! <span className="text-sm custom-text-secondary-converse italic mx-2" >Limit: {Math.ceil((chatRecords?.length - 1)/2)} / 5</span>
+                Ask Assistant!{" "}
+                <span className="text-sm custom-text-secondary-converse italic mx-2">
+                  Limit: {chatsTillNow} / {chatLimit}
+                </span>
               </h4>
             </section>
             <Button
               size={"icon"}
               className="h-[25px] w-[25px] custom-text-primary-converse"
               variant={"ghost"}
-              onClick={() => setOpenChatPopover(false)}
+              onClick={() => handleUpdateOpenChatPopover(false)}
             >
               <X size={18} />
             </Button>
@@ -417,7 +482,7 @@ const ChatPopover = () => {
         </div>
         <div
           ref={scrollingRef}
-          className={`flex flex-col h-full overflow-y-auto py-3 gap-1`}
+          className={`flex flex-col h-full overflow-y-auto py-3 gap-1 custom-scrollbar`}
         >
           {chatRecords?.map((record: chatRecords, index: number) => (
             <MessageComponent
@@ -430,6 +495,7 @@ const ChatPopover = () => {
                   ? showFollowUpQuestions
                   : false
               }
+              chatsTillNow={chatsTillNow}
               handleRegenerateResponse={handleRegenerateResponse}
               handleStopStreaming={handleStopStreaming}
               followUpQuestions={followUpQuestions}
@@ -447,11 +513,18 @@ const ChatPopover = () => {
           <input
             name="prompt"
             id="prompt"
-            className="h-full w-[90%] outline-none border-none text-md-1 custom-text-primary-converse"
+            className={`h-full w-[90%] outline-none border-none text-md-1 custom-text-primary-converse ${
+              chatsTillNow === chatLimit ? "cursor-not-allowed" : ""
+            }`}
             value={userPrompt}
-            placeholder="Enter your prompt"
+            disabled={chatsTillNow === chatLimit}
+            placeholder={
+              chatsTillNow === chatLimit
+                ? `Enter your prompt (Try again after sometime)`
+                : "Enter your prompt"
+            }
             onChange={(ev: inputChangeEventType) =>
-              setUserPrompt(ev.target.value)
+              handleUpdateUserPrompt(ev.target.value)
             }
           />
           <Button disabled={disableSubmit} size={"icon"} variant={"ghost"}>

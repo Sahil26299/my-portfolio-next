@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@tailwind utilities;
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -88,6 +88,9 @@ body {
 .secondary-background {
   @apply bg-bg-secondary dark:bg-bg-secondary-dark;
 }
+.secondary-background-converse {
+  @apply dark:bg-bg-secondary bg-bg-secondary-dark;
+}
 
 .custom-border-color {
   @apply border-dark_grey/10 dark:border-dark_grey/20;
@@ -104,4 +107,27 @@ body {
 }
 .custom-text-secondary-converse {
   @apply dark:text-slate-600 text-slate-400
+}
+
+/** 
+* Custom Scroll Bar
+*/
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgb(58, 58, 58);
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #1774ff;
+}
+  
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #3485ffff
 }

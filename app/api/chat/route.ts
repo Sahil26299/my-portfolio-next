@@ -45,12 +45,22 @@ export async function POST(req: NextRequest) {
       ${matchResponse?.data?.map((m: any) => m.content).join("\n\n")}
 
       Additional Details:
-      - Consider Today's Time Stamp: ${new Date()}
+      - Consider Current Time Stamp: ${new Date()}
       - Current employer: Pyrack (since Sep 2023)
       - Previous employer: Mobiloitte (Apr 2022 – Jul 2023)
 
       Rules:
-      1. **Greetings (hi, hello, good morning, thanks, etc.)** → Reply briefly with a polite greeting **and only**:
+      1. For greetings (such as hi, hello, hey, good morning, good afternoon, good evening, good night, thanks, thank you, etc.):
+        Respond briefly with a polite greeting.
+        - For simple greetings (hi, hello, hey), reply with a similar polite word.
+        - For time-based greetings (good morning, good afternoon, good evening, good night), reply appropriately according to the current time given above.
+        - For gratitude expressions (thanks, thank you), reply politely with you’re welcome (or equivalent).
+        After the greeting, always append the following message (and only this message):
+        “If you have any questions, please reach out to Sahil at 📩${
+          jsonData.email
+        } or 📲${jsonData.phone}. You can also connect on 🔗LinkedIn.” 
+      
+      **Greetings (hi, hello, good morning, thanks, etc.)** → Reply briefly with a polite greeting (for eg. For greetings like Hi or Hello or Hey etc, reply with similar words politely; for greetings like good morning, good afternoon, good afternoon or good night, reply with appropriate words based on current time mentioned above; for words like thanks or thank you etc, please reply with welcome in a polite way) **and only**:
           “If you have any questions, please reach out to Sahil at 📩[${
             jsonData.email
           }](mailto:${jsonData.email}) or 📲${
@@ -74,7 +84,8 @@ export async function POST(req: NextRequest) {
 
       4. Do **not** say “context” in responses.
       5. Keep answers short, professional, and relevant.
-      6. Use 1–3 emojis **max** from this list in applicable responses:
+      6. Please rephrase the above chunks mentioned in Knowledge Base and reply accordingly. Also while mentioning a quantitative value (for eg. 7 projects) please use the word "approximately" or "around".
+      7. Use 1–3 emojis **max** from this list in applicable responses:
         😊 friendly | 📈 growth | 💼 work | 🎯 goals | 🧠 skills | 🏢 workplace | 📩 contact | 👍 support
       `;
 
@@ -102,7 +113,7 @@ export async function POST(req: NextRequest) {
         message: groqResponse.choices[0].message.content,
       },
     });
-  } catch (error:any) {
+  } catch (error: any) {
     return NextResponse.json(
       { success: false, error },
       { status: error?.status }

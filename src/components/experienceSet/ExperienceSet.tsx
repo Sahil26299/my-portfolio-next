@@ -239,27 +239,27 @@ export default function ExperienceSection() {
 
                 <CardContent className="space-y-6">
                   {/* Key Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
                     <div className="text-center">
-                      <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                      <p className="lg:text-lg md:text-lg-1 text-md font-bold text-blue-600 dark:text-blue-400">
                         {exp.duration}
                       </p>
                       <p className="text-xs custom-text-secondary">Duration</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-green-600 dark:text-green-400">
+                      <p className="lg:text-lg md:text-lg-1 text-md font-bold text-green-600 dark:text-green-400">
                         {exp.projects}
                       </p>
                       <p className="text-xs custom-text-secondary">Projects</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                      <p className="lg:text-lg md:text-lg-1 text-md font-bold text-purple-600 dark:text-purple-400">
                         {exp.teamSize}
                       </p>
                       <p className="text-xs custom-text-secondary">Team Size</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
+                      <p className="lg:text-lg md:text-lg-1 text-md font-bold text-orange-600 dark:text-orange-400">
                         {exp.location}
                       </p>
                       <p className="text-xs custom-text-secondary">Location</p>

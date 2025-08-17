@@ -4,6 +4,7 @@ import {
   inputChangeEventType,
   ArrayOfStringType,
   GenericObjectInterface,
+  chatRecords,
 } from "./commonInterface/commonInterfaces";
 import details from "./json/details.json";
 import {
@@ -12,6 +13,12 @@ import {
   parseDataIntoChunks,
   storeVectorsIntoVectorStore,
 } from "./commonFunctions/commonFunctions";
+import {
+  keys,
+  getSessionStorageItem,
+  setSessionStorageItem,
+  removeSessionStorageItem,
+} from "./storage/sessionStorageUtils";
 
 export {
   poppins,
@@ -20,8 +27,13 @@ export {
   fetchMatchingEmbeddings,
   parseDataIntoChunks,
   storeVectorsIntoVectorStore,
+  keys,
+  getSessionStorageItem,
+  setSessionStorageItem,
+  removeSessionStorageItem,
 };
 export type {
+  chatRecords,
   formSubmitEventType,
   inputChangeEventType,
   ArrayOfStringType,

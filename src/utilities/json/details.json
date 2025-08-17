@@ -11,15 +11,17 @@
       "category": "Frontend",
       "proficiency": 75,
       "experience": "3+ years",
+      "prompt": "Tell me about Sahil's experience in React Native as a frontend mobile application developer.",
       "description": "Bringing mobile ideas to life with React Native — I build cross-platform apps that feel native and perform seamlessly.",
       "color": "bg-cyan-500",
       "projects": "8"
     },
     {
       "id": "react",
-      "name": "React.js",
+      "name": "React Js",
       "category": "Frontend",
       "proficiency": 84,
+      "prompt": "Tell me about Sahil's experience in React Js as a frontend web developer.",
       "experience": "3+ years",
       "description": "From scalable architecture to optimized rendering, I build dynamic, high-performance web apps with React at the core.",
       "color": "bg-blue",
@@ -31,6 +33,7 @@
       "category": "Full-stack",
       "proficiency": 65,
       "experience": "2+ years",
+      "prompt": "Tell me about Sahil's experience in Next Js. as a full stack developer.",
       "description": "Combining SSR, API routes, and seamless routing — I craft performant and SEO-friendly web applications using Next.js.",
       "color": "bg-black dark:bg-white custom-text-primary-converse",
       "projects": "5"
@@ -40,6 +43,7 @@
       "name": "TypeScript",
       "category": "Language",
       "proficiency": 74,
+      "prompt": "Tell me about Sahil's experience in Typescript from the frontend's perspective.",
       "experience": "2.5+ years",
       "description": "Strong expertise in TypeScript for type-safe development, advanced types, generics, and building scalable applications with better developer experience.",
       "color": "bg-blue",
@@ -50,6 +54,7 @@
       "name": "Tailwind CSS",
       "category": "Styling",
       "proficiency": 92,
+      "prompt": "Tell me about Sahil's experience in Tailwind CSS or any other CSS framework.",
       "experience": "2+ years",
       "description": "Design meets code — I craft elegant, responsive UIs rapidly with Tailwind CSS, ensuring pixel precision and clean utility-first styling.",
       "color": "bg-cyan-500",
@@ -61,6 +66,7 @@
       "category": "Version Control",
       "proficiency": 85,
       "experience": "3+ years",
+      "prompt": "Tell me about Sahil's experience in using a Version Control system like Git.",
       "description": "Version control isn't just a habit — it's second nature. I manage branches, resolve conflicts, and streamline collaboration with Git like a pro.",
       "color": "bg-black dark:bg-white custom-text-primary-converse",
       "projects": "22"
@@ -70,6 +76,7 @@
       "name": "Docker",
       "category": "Containerization",
       "proficiency": 68,
+      "prompt": "Tell me about Sahil's experience in using a containerization tool like Docker.",
       "experience": "2+ years",
       "description": "I containerize applications with Docker for consistent and lightweight deployment — from dev to staging, effortlessly.",
       "color": "bg-blue",
@@ -80,6 +87,7 @@
       "name": "Node.js",
       "category": "Backend",
       "proficiency": 80,
+      "prompt": "Tell me about Sahil's expertise in using backend / server side tools like Node Js.",
       "experience": "2+ years",
       "description": "Solid experience in server-side JavaScript, building RESTful APIs, working with databases, authentication, and deploying scalable backend solutions.",
       "color": "bg-green-600",
@@ -90,6 +98,7 @@
       "name": "Team Collaboration",
       "category": "Soft Skills",
       "proficiency": 82,
+      "prompt": "Tell me how active participation does Sahil shows when it comes to team collaboration.",
       "experience": "4+ years",
       "description": "I thrive in collaborative environments — bridging communication, code reviews, and task ownership to drive team success",
       "color": "bg-purple",
@@ -97,100 +106,90 @@
     }
   ],
   "experiences": [
-  {
-    "id": "current",
-    "company": "Pyrack",
-    "role": "Senior Frontend Developer",
-    "duration": "2 Years",
-    "period": "Sept 2023 - Present",
-    "location": "Pune, India",
-    "companyType": "AI Startup",
-    "description":
-      "Leading development of enterprise-grade web applications and mentoring junior developers in a fast-paced startup environment.",
-    "responsibilities": [
-      "Architected and developed scalable React/Next.js applications.",
-      "Led a team of 5 developers in implementing new product features",
-      "Optimized application performance resulting in 40% faster load times",
-      "Established code review processes and development best practices"
-    ],
-    "technologies": [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Redux toolkit (RTK)",
-      "AWS",
-      "Docker"
-    ],
-    "achievements":
-      "Enhanced team productivity by implementing linting rules, establishing consistent project structures, and initiating regular team syncs to ensure smooth collaboration. Proactively contributed across multiple projects, introduced test cases to reduce production issues, and laid the groundwork for scalable development.",
-    "companyImpact": {
-      "metric": "Revenue Growth",
-      "improvement": "+25%",
-      "description":
-        "New features and performance improvements contributed to significant revenue increase and customer retention"
-    },
-    "personalGrowth": {
-      "skills": [
-        "Team Leadership",
-        "System Architecture",
-        "Performance Optimization",
-        "Mentoring"
+    {
+      "id": "current",
+      "company": "Pyrack",
+      "role": "Senior Frontend Developer",
+      "duration": "2 Years",
+      "period": "Sept 2023 - Present",
+      "location": "Pune, India",
+      "companyType": "AI Startup",
+      "description": "Leading development of enterprise-grade web applications and mentoring junior developers in a fast-paced startup environment.",
+      "responsibilities": [
+        "Architected and developed scalable React/Next.js applications.",
+        "Led a team of 5 developers in implementing new product features",
+        "Optimized application performance resulting in 40% faster load times",
+        "Established code review processes and development best practices"
       ],
-      "leadership":
-        "Transitioned from individual contributor to team lead, managing project timelines and technical decisions",
-      "challenges":
-        "Learned to balance technical debt with feature delivery while maintaining code quality standards"
-    },
-    "teamSize": "5 developers",
-    "projects": 15
-  },
-  {
-    "id": "previous",
-    "company": "Mobiloitte Technologies",
-    "role": "React Native Developer",
-    "duration": "1.2 years",
-    "period": "April 2022 - June 2023",
-    "location": "Pune, India",
-    "companyType": "IT Services & Consulting",
-    "description":
-      "Developed responsive mobile applications for diverse clients ranging from startups to large scale MNCs.",
-    "responsibilities": [
-      "Built 6+ client mobile applications using React Native and modern its modern tools like Redux Toolkit (RTK), Firebase and Payment gateways",
-      "Collaborated with UX/UI designers to implement pixel-perfect designs",
-      "Integrated third-party APIs and payment systems",
-      "Maintained and updated legacy codebases"
-    ],
-    "technologies": [
-      "React native",
-      "Redux toolkit (RTK)",
-      "JavaScript",
-      "Firebase",
-      "REST APIs",
-      "Razorpay / Stripe"
-    ],
-    "achievements":
-      "Gained valuable exposure to mobile application development, including app behavior and architectural patterns, contributing to both industry-standard practices and my personal professional growth.",
-    "companyImpact": {
-      "metric": "Client Retention",
-      "improvement": "+15%",
-      "description":
-        "Mid-High quality deliverables and technical expertise led to increased client retention and referrals"
-    },
-    "personalGrowth": {
-      "skills": [
-        "UI development",
-        "API Integration",
-        "Client Communication",
-        "Project Management",
-        "Cross-platform Compatibility"
+      "technologies": [
+        "React",
+        "Next.js",
+        "TypeScript",
+        "Redux toolkit (RTK)",
+        "AWS",
+        "Docker"
       ],
-      "leadership":
-        "Learned to communicate technical concepts to non-technical stakeholders effectively",
-      "challenges":
-        "Adapted to working with diverse tech stacks and tight deadlines while maintaining quality"
+      "achievements": "Enhanced team productivity by implementing linting rules, establishing consistent project structures, and initiating regular team syncs to ensure smooth collaboration. Proactively contributed across multiple projects, introduced test cases to reduce production issues, and laid the groundwork for scalable development.",
+      "companyImpact": {
+        "metric": "Revenue Growth",
+        "improvement": "+25%",
+        "description": "New features and performance improvements contributed to significant revenue increase and customer retention"
+      },
+      "personalGrowth": {
+        "skills": [
+          "Team Leadership",
+          "System Architecture",
+          "Performance Optimization",
+          "Mentoring"
+        ],
+        "leadership": "Transitioned from individual contributor to team lead, managing project timelines and technical decisions",
+        "challenges": "Learned to balance technical debt with feature delivery while maintaining code quality standards"
+      },
+      "teamSize": "5 developers",
+      "projects": 15
     },
-    "teamSize": "6 developers",
-    "projects": 8
-  }
-]
+    {
+      "id": "previous",
+      "company": "Mobiloitte Technologies",
+      "role": "React Native Developer",
+      "duration": "1.2 years",
+      "period": "April 2022 - June 2023",
+      "location": "Pune, India",
+      "companyType": "IT Services & Consulting",
+      "description": "Developed responsive mobile applications for diverse clients ranging from startups to large scale MNCs.",
+      "responsibilities": [
+        "Built 6+ client mobile applications using React Native and modern its modern tools like Redux Toolkit (RTK), Firebase and Payment gateways",
+        "Collaborated with UX/UI designers to implement pixel-perfect designs",
+        "Integrated third-party APIs and payment systems",
+        "Maintained and updated legacy codebases"
+      ],
+      "technologies": [
+        "React native",
+        "Redux toolkit (RTK)",
+        "JavaScript",
+        "Firebase",
+        "REST APIs",
+        "Razorpay / Stripe"
+      ],
+      "achievements": "Gained valuable exposure to mobile application development, including app behavior and architectural patterns, contributing to both industry-standard practices and my personal professional growth.",
+      "companyImpact": {
+        "metric": "Client Retention",
+        "improvement": "+15%",
+        "description": "Mid-High quality deliverables and technical expertise led to increased client retention and referrals"
+      },
+      "personalGrowth": {
+        "skills": [
+          "UI development",
+          "API Integration",
+          "Client Communication",
+          "Project Management",
+          "Cross-platform Compatibility"
+        ],
+        "leadership": "Learned to communicate technical concepts to non-technical stakeholders effectively",
+        "challenges": "Adapted to working with diverse tech stacks and tight deadlines while maintaining quality"
+      },
+      "teamSize": "6 developers",
+      "projects": 8
+    }
+  ]
 }

@@ -25,3 +25,10 @@ export interface GenericObjectInterface {
   [key: string]: any;
 }
 export type ArrayOfStringType = string[];
+
+export interface chatRecords {
+  user: "user" | "bot";
+  message: string;
+  isLoading: boolean;
+  isError: boolean;
+}

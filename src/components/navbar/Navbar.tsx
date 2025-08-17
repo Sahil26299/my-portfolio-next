@@ -55,7 +55,7 @@ export default function Navbar() {
                       Sahil Lokhande
                     </section>
                     <p className="text-muted-foreground text-sm leading-tight self-center flex items-center gap-2">
-                      <span>Software developer</span>•
+                      <span>Fullstack AI</span>•
                       <a
                         className="h-5 w-5"
                         download={true}
@@ -70,7 +70,7 @@ export default function Navbar() {
               <li className="text-sm pl-2" title="Introduction">
                 <strong>Introduction</strong>
                 <br />
-                Frontend Software Engineer located in Pune, India 📌
+                Fullstack AI Developer located in Pune, India 📌
               </li>
               <li className="text-sm pl-2" title="Technologies">
                 <strong>Technologies</strong>

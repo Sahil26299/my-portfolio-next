@@ -14,7 +14,7 @@ function ProfilePage() {
     <div className="">
       <section
         id="about"
-        className="flex flex-col items-center justify-center h-[calc(100vh-50px)] "
+        className="flex flex-col items-center justify-center h-[calc(100svh-50px)] "
       >
         <section className="flex items-center md:flex-row flex-col gap-6 relative">
           <Image
@@ -76,7 +76,7 @@ function ProfilePage() {
         </section>
       </section>
       <section className="flex flex-col items-center p-8 gap-24">
-        <section id="skills" className="w-3/5 flex flex-col items-center py-10">
+        <section id="skills" className="lg:w-3/5 w-4/5 flex flex-col items-center py-10">
           <h4 className="text-lg font-semibold custom-text-primary text-center">
             My Skills & Expertise
           </h4>
@@ -88,9 +88,9 @@ function ProfilePage() {
         </section>
         <section
           id="experience"
-          className="w-3/5 flex flex-col items-center py-10"
+          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
         >
-          <h4 className="text-lg font-semibold custom-text-primary">
+          <h4 className="text-lg text-center font-semibold custom-text-primary">
             Professional Experience
           </h4>
           <span className="custom-text-secondary text-center text-md-1">
@@ -100,7 +100,7 @@ function ProfilePage() {
           <ExperienceSection />
         </section>
 
-        <section className="pt-10 pb-20 w-3/5 text-center">
+        <section className="pt-10 pb-20 lg:w-3/5 w-4/5 text-center">
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
             Ready to Work Together?
           </h2>

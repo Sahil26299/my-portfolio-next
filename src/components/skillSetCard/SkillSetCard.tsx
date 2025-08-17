@@ -23,7 +23,13 @@ import {
   Container,
   Github,
 } from "lucide-react";
-import { details } from "@/src/utilities";
+import { details, keys, setSessionStorageItem } from "@/src/utilities";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -68,11 +74,11 @@ const getSkillIcon = (skill: string) => {
     return <Database className="w-6 h-6" />;
   } else if (skill === "git") {
     return <Github className="w-6 h-6" />;
-  }else if (skill === "docker") {
+  } else if (skill === "docker") {
     return <Container className="w-6 h-6" />;
-  }else if (skill === "collaboration") {
+  } else if (skill === "collaboration") {
     return <Users className="w-6 h-6" />;
-  }else if (skill === "nextjs") {
+  } else if (skill === "nextjs") {
     return <Zap className="w-6 h-6 " />;
   } else {
     return <Code className="w-6 h-6" />;
@@ -87,99 +93,112 @@ const getProficiencyColor = (proficiency: number) => {
 };
 
 export default function SkillSetCards() {
+  const handleAskAssistant = (prompt:string) => {
+    setSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE, {from: "skills", prompt})
+  }
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-[240px] mt-8"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-[240px] mt-8"
     >
       {details.skills.map((skill) => (
-        <motion.div
-          key={skill.id}
-          variants={cardVariants}
-          whileHover={{
-            scale: 1.02,
-            transition: { duration: 0.2 },
-          }}
-          className="select-none"
-          whileTap={{ scale: 0.98 }}
-        >
-          <Card className="h-full min-w-[240px] secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className={`p-2 rounded-lg ${skill.color} text-white`}>
-                  {getSkillIcon(skill.id)}
-                </div>
-                <Badge variant="secondary" className="text-xs">
-                  {skill.category}
-                </Badge>
-              </div>
-              <CardTitle className="text-lg-1 font-bold custom-text-primary">
-                {skill.name}
-              </CardTitle>
-              <CardDescription className="custom-text-secondary">
-                {skill.description}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              {/* Proficiency Section */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Proficiency
-                  </span>
-                  <span
-                    className={`text-sm font-semibold ${getProficiencyColor(
-                      skill.proficiency
-                    )}`}
-                  >
-                    {getProficiencyLabel(skill.proficiency)}
-                  </span>
-                </div>
-                <div className="relative">
-                  <Progress value={skill.proficiency} className="h-2" />
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${skill.proficiency}%` }}
-                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-                    className="absolute top-0 left-0 h-2 bg-gradient-to-r from-blue to-purple rounded-full"
-                  />
-                </div>
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  {skill.proficiency}% proficiency
-                </span>
-              </div>
-
-              {/* Experience & Projects */}
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4 text-slate-500" />
-                  <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Experience
-                    </p>
-                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                      {skill.experience}
-                    </p>
+        <ContextMenu key={skill.id} >
+          <ContextMenuTrigger>
+            <motion.div
+              variants={cardVariants}
+              whileHover={{
+                scale: 1.02,
+                transition: { duration: 0.2 },
+              }}
+              className="select-none"
+              whileTap={{ scale: 0.98 }}
+            >
+              <Card className="h-full lg:min-w-[200px] min-w-[240px] secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className={`p-2 rounded-lg ${skill.color} text-white`}>
+                      {getSkillIcon(skill.id)}
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {skill.category}
+                    </Badge>
                   </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Code className="w-4 h-4 text-slate-500" />
-                  <div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Projects
-                    </p>
-                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                      {skill.projects}+
-                    </p>
+                  <CardTitle className="text-lg-1 font-bold custom-text-primary">
+                    {skill.name}
+                  </CardTitle>
+                  <CardDescription className="custom-text-secondary">
+                    {skill.description}
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  {/* Proficiency Section */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                        Proficiency
+                      </span>
+                      <span
+                        className={`text-sm font-semibold ${getProficiencyColor(
+                          skill.proficiency
+                        )}`}
+                      >
+                        {getProficiencyLabel(skill.proficiency)}
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <Progress value={skill.proficiency} className="h-2" />
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${skill.proficiency}%` }}
+                        transition={{
+                          duration: 1,
+                          delay: 0.5,
+                          ease: "easeOut",
+                        }}
+                        className="absolute top-0 left-0 h-2 bg-gradient-to-r from-blue to-purple rounded-full"
+                      />
+                    </div>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      {skill.proficiency}% proficiency
+                    </span>
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+
+                  {/* Experience & Projects */}
+                  <div className="grid grid-cols-2 gap-4 pt-2">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-4 h-4 text-slate-500" />
+                      <div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          Experience
+                        </p>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {skill.experience}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Code className="w-4 h-4 text-slate-500" />
+                      <div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          Projects
+                        </p>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                          {skill.projects}+
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </ContextMenuTrigger>
+          <ContextMenuContent className="border-none secondary-background-converse" >
+            <ContextMenuItem onClick={()=>handleAskAssistant(skill.prompt)} className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer" >Ask more about {skill.name}({skill.category}) to assistant?</ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       ))}
     </motion.div>
   );
