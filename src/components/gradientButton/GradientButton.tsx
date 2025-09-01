@@ -12,7 +12,7 @@ interface GradientButtonProps {
 
 export default function GradientButton({
   fileName = "sahilLokhandeCV.pdf",
-  fileUrl = "http://localhost:3000/files/sahilLokhandeCV.pdf",
+  fileUrl = `${location.href}files/sahilLokhandeCV.pdf`,
   className = "",
 }: GradientButtonProps) {
   const handleDownload = () => {

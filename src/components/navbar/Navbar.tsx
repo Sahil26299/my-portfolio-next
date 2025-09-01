@@ -60,7 +60,7 @@ export default function Navbar() {
                         className="h-5 w-5"
                         download={true}
                         target="_blank"
-                        href="http://localhost:3000/files/sahilLokhandeCV.pdf"
+                        href={`${location.href}files/sahilLokhandeCV.pdf`}
                       >
                         <Download size={16} />
                       </a>
