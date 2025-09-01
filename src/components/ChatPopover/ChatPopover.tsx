@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrayOfStringType,
   chatRecords,
+  details,
   formSubmitEventType,
   getSessionStorageItem,
   inputChangeEventType,
@@ -332,7 +333,7 @@ const ChatPopover = ({
       });
 
       const jsonResponse = await response.json();
-      // console.log(jsonResponse, "jsonResponse?.data?.message");
+      console.log(jsonResponse, "jsonResponse?.data?.message");
       if (jsonResponse?.success) {
         if (indexWhileRegenerate) {
           handleUpdateChatRecords([
@@ -384,6 +385,35 @@ const ChatPopover = ({
               isLoading: false,
               message:
                 "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
+              isError: true,
+            },
+          ]);
+          setStreamingIndex(lastIndex);
+          handleScrollToBottom();
+        }
+      } else {
+        if (indexWhileRegenerate) {
+          handleUpdateChatRecords([
+            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
+            {
+              ...dummyChatRecords[indexWhileRegenerate],
+              isLoading: false,
+              message:
+                `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
+              isError: true,
+            },
+            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
+          ]);
+          setStreamingIndex(indexWhileRegenerate);
+        } else {
+          const lastIndex = dummyChatRecords?.length - 1;
+          handleUpdateChatRecords([
+            ...dummyChatRecords?.slice(0, lastIndex),
+            {
+              ...dummyChatRecords[lastIndex],
+              isLoading: false,
+              message:
+                `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
               isError: true,
             },
           ]);
@@ -483,7 +513,8 @@ const ChatPopover = ({
               variant={"ghost"}
               onClick={() => handleUpdateOpenChatPopover(false)}
             >
-              <X size={18} /><sub>(ESC)</sub>
+              <X size={18} />
+              <sub>(ESC)</sub>
             </Button>
           </section>
         </div>

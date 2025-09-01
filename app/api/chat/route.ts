@@ -16,6 +16,22 @@ const supabase = createClient(
 
 const groq = new Groq({ apiKey: process.env.NEXT_GROQ_API_KEY });
 
+type modelType =
+  | "llama-3.3-70b-versatile"
+  | "gemma2-9b-it"
+  | "llama-3.1-8b-instant"
+  | "llama-guard-3-8b"
+  | "llama3-70b-8192"
+  | "llama3-8b-8192";
+const models: modelType[] = [
+  "llama-3.3-70b-versatile",
+  "gemma2-9b-it",
+  "llama-3.1-8b-instant",
+  "llama-guard-3-8b",
+  "llama3-70b-8192",
+  "llama3-8b-8192",
+];
+
 export async function POST(req: NextRequest) {
   try {
     const { prompt } = await req.json();
@@ -58,7 +74,9 @@ export async function POST(req: NextRequest) {
         After the greeting, always append the following message (and only this message):
         “If you have any questions, please reach out to Sahil at 📩${
           jsonData.email
-        } or 📲${jsonData.phone}. You can also connect on 🔗[LinkedIn](${jsonData.linkedin}).” 
+        } or 📲${jsonData.phone}. You can also connect on 🔗[LinkedIn](${
+      jsonData.linkedin
+    }).” 
       
       **Greetings (hi, hello, good morning, thanks, etc.)** → Reply briefly with a polite greeting (for eg. For greetings like Hi or Hello or Hey etc, reply with similar words politely; for greetings like good morning, good afternoon, good afternoon or good night, reply with appropriate words based on current time mentioned above; for words like thanks or thank you etc, please reply with welcome in a polite way) **and only**:
           “If you have any questions, please reach out to Sahil at 📩[${
@@ -100,7 +118,8 @@ export async function POST(req: NextRequest) {
           content: prompt,
         },
       ],
-      model: "llama3-70b-8192",
+      model: "llama-3.3-70b-versatile",
+      // model: "llama3-70b-8192",
     });
     console.log(
       groqResponse,
@@ -114,6 +133,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: any) {
+    console.log(error, "error");
     return NextResponse.json(
       { success: false, error },
       { status: error?.status }
