@@ -224,8 +224,12 @@ const ChatPopover = ({
         keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE
       );
       if (updatedValue?.from && updatedValue?.prompt !== "") {
+        // open chat modal
         handleUpdateOpenChatPopover(true);
+        // submit prompt and generate response from AI
         handleSubmitPrompt(updatedValue?.prompt);
+        // finally scroll to bottom
+        handleScrollToBottom();
       }
     };
 
@@ -398,8 +402,7 @@ const ChatPopover = ({
             {
               ...dummyChatRecords[indexWhileRegenerate],
               isLoading: false,
-              message:
-                `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
+              message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
               isError: true,
             },
             ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
@@ -412,8 +415,7 @@ const ChatPopover = ({
             {
               ...dummyChatRecords[lastIndex],
               isLoading: false,
-              message:
-                `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
+              message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
               isError: true,
             },
           ]);
