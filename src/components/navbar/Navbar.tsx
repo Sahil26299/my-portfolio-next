@@ -32,7 +32,7 @@ export default function Navbar() {
   return (
     <NavigationMenu
       viewport={false}
-      className="primary-background w-full max-w-full justify-between h-[50px] px-4 shadow dark:border-b dark:border-bg-secondary-dark sticky top-0 z-10"
+      className="primary-background w-full max-w-full justify-between h-[50px] px-4 shadow dark:border-b dark:border-bg-secondary-dark sticky top-0 z-20"
     >
       <NavigationMenuList>
         <NavigationMenuItem>

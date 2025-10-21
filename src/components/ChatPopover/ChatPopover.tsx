@@ -9,7 +9,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import style from "./ChatPopover.module.css";
@@ -47,11 +46,12 @@ interface chatRecordsPropTypes extends chatRecords {
   handleRegenerateResponse?: (index: number) => void;
   handleSubmitMessage: (msg: string) => void;
   chatsTillNow: number;
+  showUserMessageAnimation: boolean;
 }
 
 export const chatLimit = 10;
 
-const MessageComponent = ({
+const MessageComponent = React.memo(({
   user,
   message,
   isLoading,
@@ -64,6 +64,7 @@ const MessageComponent = ({
   handleStopStreaming,
   handleSubmitMessage,
   chatsTillNow,
+  showUserMessageAnimation,
 }: chatRecordsPropTypes) => {
   if (user === "bot") {
     return (
@@ -186,13 +187,42 @@ const MessageComponent = ({
         <span className="text-md-1 font-medium sticky top-2 flex flex-col h-fit mt-1">
           You
         </span>
-        <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
-          {message}
-        </span>
+        {showUserMessageAnimation ? (
+          <section className="max-w-[90%] relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 hover:from-blue-700 hover:via-purple-700 hover:to-blue-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group">
+            {/* Animated background overlay */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "100%" }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            />
+            <span className="text-white text-md-1 rounded-md p-2 flex flex-col justify-center w-full">
+              {message}
+            </span>
+            {/* Shine effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+              initial={{ x: "-100%" }}
+              animate={{ x: "200%" }}
+              transition={{
+                duration: 1.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
+            />
+          </section>
+        ) : (
+          <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
+            {message}
+          </span>
+        )}
       </div>
     );
   }
-};
+});
+
+MessageComponent.displayName = 'MessageComponent';
 
 interface ChatPopoverProps {
   openChatPopover: boolean;
@@ -201,6 +231,8 @@ interface ChatPopoverProps {
   handleUpdateOpenChatPopover: (param: boolean) => void;
   handleUpdateUserPrompt: (param: string) => void;
   handleUpdateChatRecords: (param: chatRecords[]) => void;
+  scrollingRef: React.RefObject<HTMLDivElement | null>;
+  handleScrollToBottom: () => void;
 }
 const ChatPopover = ({
   openChatPopover,
@@ -209,6 +241,8 @@ const ChatPopover = ({
   handleUpdateChatRecords,
   handleUpdateOpenChatPopover,
   handleUpdateUserPrompt,
+  scrollingRef,
+  handleScrollToBottom,
 }: ChatPopoverProps) => {
   const [streamingIndex, setStreamingIndex] = useState(-1);
   const [followUpQuestions, setFollowUpQuestions] = useState<ArrayOfStringType>(
@@ -216,7 +250,23 @@ const ChatPopover = ({
   );
   const [regenrateResponseChances, setRegenrateResponseChances] = useState(0);
   const [showFollowUpQuestions, setShowFollowUpQuestions] = useState(false);
-  const scrollingRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to bottom when new messages are added
+  useEffect(() => {
+    if (chatRecords.length > 0) {
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        handleScrollToBottom();
+      });
+    }
+  }, [chatRecords.length, handleScrollToBottom]);
+
+  // Callback ref to ensure ref is properly attached
+  const setScrollRef = useCallback((node: HTMLDivElement | null) => {
+    if (scrollingRef) {
+      (scrollingRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    }
+  }, [scrollingRef]);
 
   useEffect(() => {
     const handleSessionChange = () => {
@@ -228,8 +278,6 @@ const ChatPopover = ({
         handleUpdateOpenChatPopover(true);
         // submit prompt and generate response from AI
         handleSubmitPrompt(updatedValue?.prompt);
-        // finally scroll to bottom
-        handleScrollToBottom();
       }
     };
 
@@ -246,15 +294,6 @@ const ChatPopover = ({
       window.removeEventListener("sessionStorageUpdated", handleSessionChange);
     };
   }, [chatRecords]);
-
-  const handleScrollToBottom = () => {
-    if (scrollingRef?.current) {
-      scrollingRef?.current.scrollTo({
-        top: scrollingRef?.current?.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  };
 
   const chatsTillNow = useMemo(() => {
     const result =
@@ -274,6 +313,7 @@ const ChatPopover = ({
           isLoading: false,
           isError: false,
           user: "bot",
+          showUserMessageAnimation: false,
         },
       ]);
       setStreamingIndex(0);
@@ -287,40 +327,7 @@ const ChatPopover = ({
     }
   }, [openChatPopover, chatRecords?.length]);
 
-  // When clicking follow-up question
-  const onFollowUpClick = (prompt: string) => {
-    handleSubmitPrompt(prompt);
-    setFollowUpQuestions((prev) => prev?.filter((el) => el !== prompt));
-  };
-
-  // When pressing "send" manually
-  const onManualSubmit = () => {
-    handleSubmitPrompt(userPrompt);
-  };
-  const handleSubmitPrompt = useCallback(
-    (prompt: string) => {
-      if (!prompt.trim()) return;
-      removeSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE);
-      setShowFollowUpQuestions(false);
-      handleUpdateUserPrompt("");
-
-      const dummyChatRecords: chatRecords[] = [
-        ...chatRecords,
-        { message: prompt, isLoading: false, user: "user", isError: false },
-        { message: "", isLoading: true, user: "bot", isError: false },
-      ];
-      // Add user message + bot placeholder in one atomic update
-      handleUpdateChatRecords(dummyChatRecords);
-
-      handleScrollToBottom();
-
-      // API call
-      submitPromptAPI(prompt, dummyChatRecords);
-    },
-    [chatRecords]
-  );
-
-  const submitPromptAPI = async (
+  const submitPromptAPI = useCallback(async (
     message: string = userPrompt,
     dummyChatRecords: chatRecords[] = [...chatRecords],
     indexWhileRegenerate?: number
@@ -337,8 +344,9 @@ const ChatPopover = ({
       });
 
       const jsonResponse = await response.json();
-      console.log(jsonResponse, "jsonResponse?.data?.message");
+      // console.log(jsonResponse, "jsonResponse?.data?.message");
       if (jsonResponse?.success) {
+        // when regenerating a response for one of the previous chats
         if (indexWhileRegenerate) {
           handleUpdateChatRecords([
             ...dummyChatRecords?.slice(0, indexWhileRegenerate),
@@ -352,6 +360,7 @@ const ChatPopover = ({
           ]);
           setStreamingIndex(indexWhileRegenerate);
         } else {
+          // while generating a new response
           const lastIndex = dummyChatRecords?.length - 1;
           const result = [
             ...dummyChatRecords?.slice(0, lastIndex),
@@ -374,7 +383,7 @@ const ChatPopover = ({
               ...dummyChatRecords[indexWhileRegenerate],
               isLoading: false,
               message:
-                "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
+                "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
               isError: true,
             },
             ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
@@ -388,7 +397,7 @@ const ChatPopover = ({
               ...dummyChatRecords[lastIndex],
               isLoading: false,
               message:
-                "You’ve reached your chat limit. You’ll be able to continue chatting in about 20 minutes once your limit resets.",
+                "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
               isError: true,
             },
           ]);
@@ -427,25 +436,62 @@ const ChatPopover = ({
       console.log(error, "errrror");
     } finally {
     }
-  };
+  }, [userPrompt, chatRecords, handleUpdateChatRecords, handleScrollToBottom]);
 
-  const handleRegenerateResponse = (index: number) => {
+  const handleSubmitPrompt = useCallback(
+    (prompt: string) => {
+      if (!prompt.trim()) return;
+      removeSessionStorageItem(keys.SUBMIT_USER_PROMPT_FROM_OUTSIDE);
+      setShowFollowUpQuestions(false);
+      handleUpdateUserPrompt("");
+
+      const dummyChatRecords: chatRecords[] = [
+        ...chatRecords,
+        { message: prompt, isLoading: false, user: "user", isError: false, showUserMessageAnimation: true },
+        { message: "", isLoading: true, user: "bot", isError: false, showUserMessageAnimation: false },
+      ];
+      // Add user message + bot placeholder in one atomic update
+      handleUpdateChatRecords(dummyChatRecords);
+
+      handleScrollToBottom();
+
+      // API call
+      submitPromptAPI(prompt, dummyChatRecords);
+    },
+    [chatRecords, handleUpdateUserPrompt, handleUpdateChatRecords, handleScrollToBottom, submitPromptAPI]
+  );
+
+  // When clicking follow-up question
+  const onFollowUpClick = useCallback((prompt: string) => {
+    handleSubmitPrompt(prompt);
+    setFollowUpQuestions((prev) => prev?.filter((el) => el !== prompt));
+  }, [handleSubmitPrompt]);
+
+  // When pressing "send" manually
+  const onManualSubmit = useCallback(() => {
+    handleSubmitPrompt(userPrompt);
+  }, [userPrompt, handleSubmitPrompt]);
+
+  const handleRegenerateResponse = useCallback((index: number) => {
     setShowFollowUpQuestions(false);
     setRegenrateResponseChances((prev) => prev + 1);
     const dummyChatRecords: chatRecords[] = [
-      ...chatRecords?.slice(0, index),
-      { message: "", isLoading: true, user: "bot", isError: false },
+      ...chatRecords?.slice(0, index-1),
+      { ...chatRecords[index-1], showUserMessageAnimation: true },
+      { message: "", isLoading: true, user: "bot", isError: false, showUserMessageAnimation: false },
       ...chatRecords?.slice(index + 1),
     ];
 
     handleUpdateChatRecords(dummyChatRecords);
     submitPromptAPI(chatRecords[index - 1].message, dummyChatRecords, index);
-  };
+  }, [chatRecords, handleUpdateChatRecords, submitPromptAPI]);
 
   const handleStopStreaming = useCallback(() => {
     setStreamingIndex(-1);
     setShowFollowUpQuestions(true);
-  }, []);
+    const dummyChatRecords: chatRecords[] = chatRecords?.map((el)=>el?.showUserMessageAnimation ? {...el, showUserMessageAnimation: false} : el);
+    handleUpdateChatRecords(dummyChatRecords)
+  }, [chatRecords, handleUpdateChatRecords]);
 
   /**
    * Among last 2 messages check which one contains isLoading true
@@ -521,7 +567,7 @@ const ChatPopover = ({
           </section>
         </div>
         <div
-          ref={scrollingRef}
+          ref={setScrollRef}
           className={`flex flex-col h-full overflow-y-auto py-3 gap-1 custom-scrollbar`}
         >
           {chatRecords?.map((record: chatRecords, index: number) => (
@@ -535,6 +581,7 @@ const ChatPopover = ({
                   ? showFollowUpQuestions
                   : false
               }
+              showUserMessageAnimation={record.showUserMessageAnimation}
               chatsTillNow={chatsTillNow}
               handleRegenerateResponse={handleRegenerateResponse}
               handleStopStreaming={handleStopStreaming}

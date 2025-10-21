@@ -2,7 +2,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import ChatPopover from "@/src/components/ChatPopover/ChatPopover";
 import { ThemeProvider } from "@/src/components/hoc/ThemeProvider";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "@/src/components/navbar/Navbar";
 import ProfilePage from "@/src/components/profilePage/ProfilePage";
 import Footer from "@/src/components/footer/Footer";
@@ -14,6 +14,7 @@ export default function Page() {
   const [openChatPopover, setOpenChatPopover] = useState(false);
   const [userPrompt, setUserPrompt] = useState("");
   const [chatRecords, setChatRecords] = useState<chatRecords[]>([]);
+  const scrollingRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +32,27 @@ export default function Page() {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [mounted]);
+  
+  const handleScrollToBottom = useCallback(() => {
+    if (scrollingRef?.current) {
+      scrollingRef.current.scrollTo({
+        top: 9999,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(scrollingRef?.current,'scrollingRef?.current', openChatPopover, "openChatPopover");
+    if (openChatPopover) {
+      // Use requestAnimationFrame to ensure the ref is attached after component mount
+      requestAnimationFrame(() => {
+        if (scrollingRef?.current) {
+          handleScrollToBottom();
+        }
+      });
+    }
+  }, [openChatPopover, handleScrollToBottom]);
 
   /**
    * This API call will check if vectors are present in the store, if not then it will add vectors in the store.
@@ -95,6 +117,8 @@ export default function Page() {
               handleUpdateChatRecords={handleUpdateChatRecords}
               handleUpdateOpenChatPopover={handleUpdateOpenChatPopover}
               handleUpdateUserPrompt={handleUpdateUserPrompt}
+              scrollingRef={scrollingRef}
+              handleScrollToBottom={handleScrollToBottom}
             />
           </section>
           <Footer />

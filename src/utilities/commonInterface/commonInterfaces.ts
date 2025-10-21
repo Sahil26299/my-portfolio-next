@@ -31,4 +31,5 @@ export interface chatRecords {
   message: string;
   isLoading: boolean;
   isError: boolean;
+  showUserMessageAnimation: boolean // only for user's prompt to show animation to the last submited prompt
 }
