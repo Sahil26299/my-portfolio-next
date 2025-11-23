@@ -10,6 +10,8 @@ import {
   Code,
   Briefcase,
   User,
+  Twitter,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { details } from "@/src/utilities";
@@ -26,6 +28,12 @@ const socialLinks = [
     icon: <Github className="w-5 h-5" />,
     url: details.github,
     color: "hover:text-gray-900 hover:bg-gray-50",
+  },
+  {
+    name: "X",
+    icon: <X className="w-5 h-5" />,
+    url: details.x,
+    color: "hover:text-blue-400 hover:bg-blue-50",
   },
   {
     name: "Email",
@@ -139,7 +147,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white">
               Connect With Me
             </h4>
-            <div className="flex items-center flex-wrap w-[240px] gap-3">
+            <div className="flex items-center flex-wrap gap-3">
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.name}

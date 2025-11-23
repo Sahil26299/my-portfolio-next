@@ -66,6 +66,26 @@ function ProfilePage() {
                 href={details.linkedin}
               >
                 LinkedIn
+              </motion.a>{" "}
+              •{" "}
+              <motion.a
+                target="_blank"
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.8 }}
+                href={details.github}
+              >
+                GitHub
+              </motion.a>{" "}
+              •{" "}
+              <motion.a
+                target="_blank"
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 1.0 }}
+                href={details.x}
+              >
+                X
               </motion.a>
             </section>
             <h2 className="lg:text-2xl sm:text-xl text-[36px] font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
@@ -95,7 +115,10 @@ function ProfilePage() {
             and hands-on experience
           </span>
           <span className="custom-text-secondary text-center text-md-1 flex gap-1">
-            <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
+            <Lightbulb
+              size={16}
+              className="text-yellow-500 animate-pulse md:flex hidden"
+            />
             <u>Tip:</u>{" "}
             {isMobile
               ? `Tap and hold (or R. Click while on PC)`
@@ -116,7 +139,10 @@ function ProfilePage() {
             how each experience has shaped my professional growth
           </span>
           <span className="custom-text-secondary text-center text-md-1 flex gap-1">
-            <Lightbulb size={16} className="text-yellow-500 animate-pulse md:flex hidden" />
+            <Lightbulb
+              size={16}
+              className="text-yellow-500 animate-pulse md:flex hidden"
+            />
             <u>Tip:</u>{" "}
             {isMobile
               ? `Tap and hold (or R. Click while on PC)`

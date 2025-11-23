@@ -5,12 +5,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Bot, RefreshCw, Send, X } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import style from "./ChatPopover.module.css";
 import {
   Tooltip,
@@ -51,178 +46,189 @@ interface chatRecordsPropTypes extends chatRecords {
 
 export const chatLimit = 10;
 
-const MessageComponent = React.memo(({
-  user,
-  message,
-  isLoading,
-  isError,
-  streaming,
-  index,
-  followUpQuestions = [],
-  showFollowUpQuestions,
-  handleRegenerateResponse,
-  handleStopStreaming,
-  handleSubmitMessage,
-  chatsTillNow,
-  showUserMessageAnimation,
-}: chatRecordsPropTypes) => {
-  if (user === "bot") {
-    return (
-      <section className="flex flex-col">
-        <section
-          className={`flex relative p-2 gap-2 custom-text-primary-converse ${style.chatMessageInAnimation}`}
-        >
-          <Bot
-            size={24}
-            strokeWidth={1.75}
-            className={`sticky top-2 flex flex-col h-fit mt-1`}
-          />
-          <span
-            className={`${
-              isLoading
-                ? ""
-                : isError
-                ? "bg-red-50 text-red"
-                : "bg-gradient-to-br from-blue/20 to-purple/10"
-            } font-normal custom-text-primary-converse min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
-              style.markdownTableStyles
-            }`}
+const MessageComponent = React.memo(
+  ({
+    user,
+    message,
+    isLoading,
+    isError,
+    streaming,
+    index,
+    followUpQuestions = [],
+    showFollowUpQuestions,
+    handleRegenerateResponse,
+    handleStopStreaming,
+    handleSubmitMessage,
+    chatsTillNow,
+    showUserMessageAnimation,
+  }: chatRecordsPropTypes) => {
+    if (user === "bot") {
+      return (
+        <section className="flex flex-col">
+          <section
+            className={`flex relative p-2 gap-2 custom-text-primary-converse ${style.chatMessageInAnimation}`}
           >
-            {isLoading ? (
-              <LottieAnimProvider
-                animationFile={animatedLoader}
-                height={20}
-                width={50}
-              />
-            ) : streaming ? (
-              <TypeWriterUI
-                delay={50}
-                botResponse={message}
-                handleAnimationFinished={handleStopStreaming}
-                textClass=""
-              />
-            ) : (
-              <Markdown key={message} remarkPlugins={[remarkGfm]}>
-                {message}
-              </Markdown>
-            )}
-            {index !== 0 && message?.length > 0 && (
-              <section className="w-full border-t custom-border-color mt-4 flex items-center justify-end py-2">
-                <motion.button
-                  disabled={streaming || chatsTillNow === chatLimit}
-                  initial="rest"
-                  whileHover="hover"
-                  animate="rest"
-                  className={`px-4 font-medium rounded-md overflow-hidden flex items-center gap-2 ${
-                    streaming || chatsTillNow === chatLimit
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
-                  } hover:underline transition-all duration-300 custom-text-primary-converse`}
-                  style={{ position: "relative" }}
-                  onClick={() =>
-                    handleRegenerateResponse && handleRegenerateResponse(index)
-                  }
+            <Bot
+              size={24}
+              strokeWidth={1.75}
+              className={`sticky top-2 flex flex-col h-fit mt-1`}
+            />
+            <span
+              className={`${
+                isLoading
+                  ? ""
+                  : isError
+                  ? "bg-red-50 text-red"
+                  : "bg-gradient-to-br from-blue/20 to-purple/10"
+              } font-normal custom-text-primary-converse min-w-[75px] min-h-[35px] text-md-1 rounded-md p-2 flex flex-col justify-center gap-1 max-w-[90%] ${
+                style.markdownTableStyles
+              }`}
+            >
+              {isLoading ? (
+                <LottieAnimProvider
+                  animationFile={animatedLoader}
+                  height={20}
+                  width={50}
+                />
+              ) : streaming ? (
+                <TypeWriterUI
+                  delay={50}
+                  botResponse={message}
+                  handleAnimationFinished={handleStopStreaming}
+                  textClass=""
+                />
+              ) : (
+                <Markdown
+                  key={message}
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    a: ({ node, ...props }) => (
+                      <a {...props} target="_blank" rel="noopener noreferrer" />
+                    ),
+                  }}
                 >
-                  {/* Revealing Text */}
-                  <motion.p
-                    variants={{
-                      rest: { opacity: 0, x: -20 },
-                      hover: { opacity: 1, x: 0 },
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="text-sm"
-                  >
-                    Regenerate response ?
-                  </motion.p>
-                  {/* Button Label */}
-                  <motion.span
-                    variants={{
-                      rest: { opacity: 1, x: -4 },
-                      hover: { opacity: 0.8, x: 0 },
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <RefreshCw size={16} />
-                  </motion.span>
-                </motion.button>
-              </section>
-            )}
-          </span>
-        </section>
-        {!streaming &&
-          showFollowUpQuestions &&
-          followUpQuestions?.length > 0 && (
-            <section className="flex items-center flex-wrap gap-1 p-2 border-slate-400 border border-dashed bg-amber-50">
-              <span className="text-md-1 font-medium custom-text-secondary-converse">
-                📌 Suggestions:
-              </span>
-              {followUpQuestions?.map((el, ind) => {
-                return (
+                  {message}
+                </Markdown>
+              )}
+              {index !== 0 && message?.length > 0 && (
+                <section className="w-full border-t custom-border-color mt-4 flex items-center justify-end py-2">
                   <motion.button
-                    disabled={chatsTillNow === chatLimit}
-                    key={el}
-                    className={`px-1 text-left rounded-md text-md-1 text-black ${
-                      chatsTillNow === chatLimit
+                    disabled={streaming || chatsTillNow === chatLimit}
+                    initial="rest"
+                    whileHover="hover"
+                    animate="rest"
+                    className={`px-4 font-medium rounded-md overflow-hidden flex items-center gap-2 ${
+                      streaming || chatsTillNow === chatLimit
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
-                    } my-[2px]`}
-                    initial={{ opacity: 0, y: 3 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 * (ind + 1) }}
-                    onClick={() => handleSubmitMessage(el)}
+                    } hover:underline transition-all duration-300 custom-text-primary-converse`}
+                    style={{ position: "relative" }}
+                    onClick={() =>
+                      handleRegenerateResponse &&
+                      handleRegenerateResponse(index)
+                    }
                   >
-                    <u>{el}</u>
+                    {/* Revealing Text */}
+                    <motion.p
+                      variants={{
+                        rest: { opacity: 0, x: -20 },
+                        hover: { opacity: 1, x: 0 },
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="text-sm"
+                    >
+                      Regenerate response ?
+                    </motion.p>
+                    {/* Button Label */}
+                    <motion.span
+                      variants={{
+                        rest: { opacity: 1, x: -4 },
+                        hover: { opacity: 0.8, x: 0 },
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <RefreshCw size={16} />
+                    </motion.span>
                   </motion.button>
-                );
-              })}
+                </section>
+              )}
+            </span>
+          </section>
+          {!streaming &&
+            showFollowUpQuestions &&
+            followUpQuestions?.length > 0 && (
+              <section className="flex items-center flex-wrap gap-1 p-2 border-slate-400 border border-dashed bg-amber-50">
+                <span className="text-md-1 font-medium custom-text-secondary-converse">
+                  📌 Suggestions:
+                </span>
+                {followUpQuestions?.map((el, ind) => {
+                  return (
+                    <motion.button
+                      disabled={chatsTillNow === chatLimit}
+                      key={el}
+                      className={`px-1 text-left rounded-md text-md-1 text-black ${
+                        chatsTillNow === chatLimit
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer"
+                      } my-[2px]`}
+                      initial={{ opacity: 0, y: 3 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.2 * (ind + 1) }}
+                      onClick={() => handleSubmitMessage(el)}
+                    >
+                      <u>{el}</u>
+                    </motion.button>
+                  );
+                })}
+              </section>
+            )}
+        </section>
+      );
+    } else {
+      return (
+        <div
+          className={`mt-2 flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
+        >
+          <span className="text-md-1 font-medium sticky top-2 flex flex-col h-fit mt-1">
+            You
+          </span>
+          {showUserMessageAnimation ? (
+            <section className="max-w-[90%] relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 hover:from-blue-700 hover:via-purple-700 hover:to-blue-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group">
+              {/* Animated background overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "100%" }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+              />
+              <span className="text-white text-md-1 rounded-md p-2 flex flex-col justify-center w-full">
+                {message}
+              </span>
+              {/* Shine effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                initial={{ x: "-100%" }}
+                animate={{ x: "200%" }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+              />
             </section>
-          )}
-      </section>
-    );
-  } else {
-    return (
-      <div
-        className={`mt-2 flex custom-text-primary-converse relative p-2 gap-2 ${style.chatMessageInAnimation}`}
-      >
-        <span className="text-md-1 font-medium sticky top-2 flex flex-col h-fit mt-1">
-          You
-        </span>
-        {showUserMessageAnimation ? (
-          <section className="max-w-[90%] relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 hover:from-blue-700 hover:via-purple-700 hover:to-blue-900 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group">
-            {/* Animated background overlay */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              initial={{ x: "-100%" }}
-              whileHover={{ x: "100%" }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-            />
-            <span className="text-white text-md-1 rounded-md p-2 flex flex-col justify-center w-full">
+          ) : (
+            <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
               {message}
             </span>
-            {/* Shine effect */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
-              initial={{ x: "-100%" }}
-              animate={{ x: "200%" }}
-              transition={{
-                duration: 1.5,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-            />
-          </section>
-        ) : (
-          <span className="text-white text-md-1 rounded-md bg-blue p-2 flex flex-col justify-center max-w-[90%]">
-            {message}
-          </span>
-        )}
-      </div>
-    );
+          )}
+        </div>
+      );
+    }
   }
-});
+);
 
-MessageComponent.displayName = 'MessageComponent';
+MessageComponent.displayName = "MessageComponent";
 
 interface ChatPopoverProps {
   openChatPopover: boolean;
@@ -262,11 +268,16 @@ const ChatPopover = ({
   }, [chatRecords.length, handleScrollToBottom]);
 
   // Callback ref to ensure ref is properly attached
-  const setScrollRef = useCallback((node: HTMLDivElement | null) => {
-    if (scrollingRef) {
-      (scrollingRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-    }
-  }, [scrollingRef]);
+  const setScrollRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (scrollingRef) {
+        (
+          scrollingRef as React.MutableRefObject<HTMLDivElement | null>
+        ).current = node;
+      }
+    },
+    [scrollingRef]
+  );
 
   useEffect(() => {
     const handleSessionChange = () => {
@@ -327,116 +338,119 @@ const ChatPopover = ({
     }
   }, [openChatPopover, chatRecords?.length]);
 
-  const submitPromptAPI = useCallback(async (
-    message: string = userPrompt,
-    dummyChatRecords: chatRecords[] = [...chatRecords],
-    indexWhileRegenerate?: number
-  ) => {
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: message,
-        }),
-      });
+  const submitPromptAPI = useCallback(
+    async (
+      message: string = userPrompt,
+      dummyChatRecords: chatRecords[] = [...chatRecords],
+      indexWhileRegenerate?: number
+    ) => {
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: message,
+          }),
+        });
 
-      const jsonResponse = await response.json();
-      // console.log(jsonResponse, "jsonResponse?.data?.message");
-      if (jsonResponse?.success) {
-        // when regenerating a response for one of the previous chats
-        if (indexWhileRegenerate) {
-          handleUpdateChatRecords([
-            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
-            {
-              ...dummyChatRecords[indexWhileRegenerate],
-              isLoading: false,
-              message: jsonResponse?.data?.message,
-              isError: false,
-            },
-            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
-          ]);
-          setStreamingIndex(indexWhileRegenerate);
+        const jsonResponse = await response.json();
+        // console.log(jsonResponse, "jsonResponse?.data?.message");
+        if (jsonResponse?.success) {
+          // when regenerating a response for one of the previous chats
+          if (indexWhileRegenerate) {
+            handleUpdateChatRecords([
+              ...dummyChatRecords?.slice(0, indexWhileRegenerate),
+              {
+                ...dummyChatRecords[indexWhileRegenerate],
+                isLoading: false,
+                message: jsonResponse?.data?.message,
+                isError: false,
+              },
+              ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
+            ]);
+            setStreamingIndex(indexWhileRegenerate);
+          } else {
+            // while generating a new response
+            const lastIndex = dummyChatRecords?.length - 1;
+            const result = [
+              ...dummyChatRecords?.slice(0, lastIndex),
+              {
+                ...dummyChatRecords[lastIndex],
+                isLoading: false,
+                message: jsonResponse?.data?.message,
+                isError: false,
+              },
+            ];
+            handleUpdateChatRecords(result);
+            setStreamingIndex(lastIndex);
+            handleScrollToBottom();
+          }
+        } else if (jsonResponse?.error?.status === 429) {
+          if (indexWhileRegenerate) {
+            handleUpdateChatRecords([
+              ...dummyChatRecords?.slice(0, indexWhileRegenerate),
+              {
+                ...dummyChatRecords[indexWhileRegenerate],
+                isLoading: false,
+                message:
+                  "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
+                isError: true,
+              },
+              ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
+            ]);
+            setStreamingIndex(indexWhileRegenerate);
+          } else {
+            const lastIndex = dummyChatRecords?.length - 1;
+            handleUpdateChatRecords([
+              ...dummyChatRecords?.slice(0, lastIndex),
+              {
+                ...dummyChatRecords[lastIndex],
+                isLoading: false,
+                message:
+                  "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
+                isError: true,
+              },
+            ]);
+            setStreamingIndex(lastIndex);
+            handleScrollToBottom();
+          }
         } else {
-          // while generating a new response
-          const lastIndex = dummyChatRecords?.length - 1;
-          const result = [
-            ...dummyChatRecords?.slice(0, lastIndex),
-            {
-              ...dummyChatRecords[lastIndex],
-              isLoading: false,
-              message: jsonResponse?.data?.message,
-              isError: false,
-            },
-          ];
-          handleUpdateChatRecords(result);
-          setStreamingIndex(lastIndex);
-          handleScrollToBottom();
+          if (indexWhileRegenerate) {
+            handleUpdateChatRecords([
+              ...dummyChatRecords?.slice(0, indexWhileRegenerate),
+              {
+                ...dummyChatRecords[indexWhileRegenerate],
+                isLoading: false,
+                message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
+                isError: true,
+              },
+              ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
+            ]);
+            setStreamingIndex(indexWhileRegenerate);
+          } else {
+            const lastIndex = dummyChatRecords?.length - 1;
+            handleUpdateChatRecords([
+              ...dummyChatRecords?.slice(0, lastIndex),
+              {
+                ...dummyChatRecords[lastIndex],
+                isLoading: false,
+                message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
+                isError: true,
+              },
+            ]);
+            setStreamingIndex(lastIndex);
+            handleScrollToBottom();
+          }
         }
-      } else if (jsonResponse?.error?.status === 429) {
-        if (indexWhileRegenerate) {
-          handleUpdateChatRecords([
-            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
-            {
-              ...dummyChatRecords[indexWhileRegenerate],
-              isLoading: false,
-              message:
-                "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
-              isError: true,
-            },
-            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
-          ]);
-          setStreamingIndex(indexWhileRegenerate);
-        } else {
-          const lastIndex = dummyChatRecords?.length - 1;
-          handleUpdateChatRecords([
-            ...dummyChatRecords?.slice(0, lastIndex),
-            {
-              ...dummyChatRecords[lastIndex],
-              isLoading: false,
-              message:
-                "You've reached your chat limit. You'll be able to continue chatting in about 20 minutes once your limit resets.",
-              isError: true,
-            },
-          ]);
-          setStreamingIndex(lastIndex);
-          handleScrollToBottom();
-        }
-      } else {
-        if (indexWhileRegenerate) {
-          handleUpdateChatRecords([
-            ...dummyChatRecords?.slice(0, indexWhileRegenerate),
-            {
-              ...dummyChatRecords[indexWhileRegenerate],
-              isLoading: false,
-              message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
-              isError: true,
-            },
-            ...dummyChatRecords?.slice(indexWhileRegenerate + 1),
-          ]);
-          setStreamingIndex(indexWhileRegenerate);
-        } else {
-          const lastIndex = dummyChatRecords?.length - 1;
-          handleUpdateChatRecords([
-            ...dummyChatRecords?.slice(0, lastIndex),
-            {
-              ...dummyChatRecords[lastIndex],
-              isLoading: false,
-              message: `Sorry, we are currently facing problems with the server, please try contacting Sahil at ${details.phone} or ${details.email}.`,
-              isError: true,
-            },
-          ]);
-          setStreamingIndex(lastIndex);
-          handleScrollToBottom();
-        }
+      } catch (error) {
+        console.log(error, "errrror");
+      } finally {
       }
-    } catch (error) {
-      console.log(error, "errrror");
-    } finally {
-    }
-  }, [userPrompt, chatRecords, handleUpdateChatRecords, handleScrollToBottom]);
+    },
+    [userPrompt, chatRecords, handleUpdateChatRecords, handleScrollToBottom]
+  );
 
   const handleSubmitPrompt = useCallback(
     (prompt: string) => {
@@ -447,8 +461,20 @@ const ChatPopover = ({
 
       const dummyChatRecords: chatRecords[] = [
         ...chatRecords,
-        { message: prompt, isLoading: false, user: "user", isError: false, showUserMessageAnimation: true },
-        { message: "", isLoading: true, user: "bot", isError: false, showUserMessageAnimation: false },
+        {
+          message: prompt,
+          isLoading: false,
+          user: "user",
+          isError: false,
+          showUserMessageAnimation: true,
+        },
+        {
+          message: "",
+          isLoading: true,
+          user: "bot",
+          isError: false,
+          showUserMessageAnimation: false,
+        },
       ];
       // Add user message + bot placeholder in one atomic update
       handleUpdateChatRecords(dummyChatRecords);
@@ -458,39 +484,61 @@ const ChatPopover = ({
       // API call
       submitPromptAPI(prompt, dummyChatRecords);
     },
-    [chatRecords, handleUpdateUserPrompt, handleUpdateChatRecords, handleScrollToBottom, submitPromptAPI]
+    [
+      chatRecords,
+      handleUpdateUserPrompt,
+      handleUpdateChatRecords,
+      handleScrollToBottom,
+      submitPromptAPI,
+    ]
   );
 
   // When clicking follow-up question
-  const onFollowUpClick = useCallback((prompt: string) => {
-    handleSubmitPrompt(prompt);
-    setFollowUpQuestions((prev) => prev?.filter((el) => el !== prompt));
-  }, [handleSubmitPrompt]);
+  const onFollowUpClick = useCallback(
+    (prompt: string) => {
+      handleSubmitPrompt(prompt);
+      setFollowUpQuestions((prev) => prev?.filter((el) => el !== prompt));
+    },
+    [handleSubmitPrompt]
+  );
 
   // When pressing "send" manually
   const onManualSubmit = useCallback(() => {
     handleSubmitPrompt(userPrompt);
   }, [userPrompt, handleSubmitPrompt]);
 
-  const handleRegenerateResponse = useCallback((index: number) => {
-    setShowFollowUpQuestions(false);
-    setRegenrateResponseChances((prev) => prev + 1);
-    const dummyChatRecords: chatRecords[] = [
-      ...chatRecords?.slice(0, index-1),
-      { ...chatRecords[index-1], showUserMessageAnimation: true },
-      { message: "", isLoading: true, user: "bot", isError: false, showUserMessageAnimation: false },
-      ...chatRecords?.slice(index + 1),
-    ];
+  const handleRegenerateResponse = useCallback(
+    (index: number) => {
+      setShowFollowUpQuestions(false);
+      setRegenrateResponseChances((prev) => prev + 1);
+      const dummyChatRecords: chatRecords[] = [
+        ...chatRecords?.slice(0, index - 1),
+        { ...chatRecords[index - 1], showUserMessageAnimation: true },
+        {
+          message: "",
+          isLoading: true,
+          user: "bot",
+          isError: false,
+          showUserMessageAnimation: false,
+        },
+        ...chatRecords?.slice(index + 1),
+      ];
 
-    handleUpdateChatRecords(dummyChatRecords);
-    submitPromptAPI(chatRecords[index - 1].message, dummyChatRecords, index);
-  }, [chatRecords, handleUpdateChatRecords, submitPromptAPI]);
+      handleUpdateChatRecords(dummyChatRecords);
+      submitPromptAPI(chatRecords[index - 1].message, dummyChatRecords, index);
+    },
+    [chatRecords, handleUpdateChatRecords, submitPromptAPI]
+  );
 
   const handleStopStreaming = useCallback(() => {
     setStreamingIndex(-1);
     setShowFollowUpQuestions(true);
-    const dummyChatRecords: chatRecords[] = chatRecords?.map((el)=>el?.showUserMessageAnimation ? {...el, showUserMessageAnimation: false} : el);
-    handleUpdateChatRecords(dummyChatRecords)
+    const dummyChatRecords: chatRecords[] = chatRecords?.map((el) =>
+      el?.showUserMessageAnimation
+        ? { ...el, showUserMessageAnimation: false }
+        : el
+    );
+    handleUpdateChatRecords(dummyChatRecords);
   }, [chatRecords, handleUpdateChatRecords]);
 
   /**

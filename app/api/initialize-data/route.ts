@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import { FeatureExtractionPipeline, pipeline } from "@xenova/transformers";
 import { createClient } from "@supabase/supabase-js";
-import jsonData from "../../../src/utilities/json/details.json";
+import jsonData from "@/src/utilities/json/details.json";
 import csv from "csv-parser";
 import {
   embedChunksIntoVectors,
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
     let flag = false;
     if (supabaseDb?.data?.length === 0) {
       flag = true;
-      // initialize an embedder to embed pdf and puser input prompt
+      // initialize an embedder to embed pdf and user input prompt
       const embedder = await pipeline(
         "feature-extraction",
         "Xenova/all-MiniLM-L6-v2"
