@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Portfolio | Sahil Lokhande",
-
+    url: "https://my-portfolio-next-mauve.vercel.app",
     // Ideal OG image size: 1200×630
     images: [
       {
