@@ -229,8 +229,8 @@ export default function ExperienceSection() {
                   className="relative group"
                 >
                   {/* Timeline Dot */}
-                  <div className="absolute left-6 top-8 w-4 h-4 bg-blue rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
-                  <div className="group-hover:animate-ping absolute left-6 top-8 w-4 h-4 bg-blue rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
+                  <div className="absolute left-6 top-8 w-4 h-4 bg-orange-400 rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
+                  <div className="group-hover:animate-ping absolute left-6 top-8 w-4 h-4 bg-orange-400 rounded-full border-4 border-white dark:border-slate-800 shadow-lg hidden md:block z-10" />
 
                   <Card className="hover:scale-[1.01] ml-0 md:ml-16 secondary-background backdrop-blur-sm custom-border-color hover:shadow-xl transition-all duration-300">
                     <CardHeader className="pb-4">
