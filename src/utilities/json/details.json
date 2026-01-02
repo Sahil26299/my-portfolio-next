@@ -194,5 +194,36 @@
       "teamSize": "6 developers",
       "projects": 8
     }
+  ],
+  "projects": [
+    {
+      "id": "TaskManager",
+      "title": "Task Manager",
+      "image": "/images/taskManagerApp.png",
+      "description": "Modern, lightweight productivity application built with Next.js, allowing users to create, update, and organize tasks or notes from the web app or directly through WhatsApp.",
+      "links": {
+        "live": "https://agentic-task-manager.vercel.app/",
+        "github": "https://github.com/Sahil26299/agentic-task-manager"
+      },
+      "technologies": [
+        "Next.js",
+        "MongoDB",
+        "TypeScript",
+        "Tailwind CSS"
+      ],
+      "features": ["AI Agent", "WhatsApp Integration", "Task Management"]
+    },
+    {
+      "id": "ping",
+      "title": "Ping",
+      "image": "/images/pingApp.png",
+      "description": "Modern, real-time messaging application built with Next.js, allowing users to connect with friends, collaborate with teams, and stay in touch instantly.",
+      "links": {
+        "live": "https://ping-ruby-eight.vercel.app",
+        "github": "https://github.com/Sahil26299/ping"
+      },
+      "technologies": ["Next.js", "Socket.IO", "Node.js", "MongoDB"],
+      "features": ["Real-time messaging", "User management", "User Auth"]
+    }
   ]
 }

@@ -197,9 +197,6 @@ export default function Footer() {
               <p>
                 © {new Date().getFullYear()} Sahil Lokhande. All rights
                 reserved.
-                <span className="ml-2">
-                  Built with ❤️ using Fullstack + AI in just 1 day
-                </span>
               </p>
             </motion.div>
 

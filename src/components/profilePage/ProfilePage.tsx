@@ -5,20 +5,24 @@ import { motion } from "framer-motion";
 import TypeWriterUI from "../TypeWriterUI/TypeWriterUI";
 import SkillSetCards from "../skillSetCard/SkillSetCard";
 import ExperienceSection from "../experienceSet/ExperienceSet";
+import Projects from "../projects/Projects";
 import GradientButton from "../gradientButton/GradientButton";
 import dayjs from "dayjs";
 import { details } from "@/src/utilities";
 import { Lightbulb } from "lucide-react";
 import { isMobile } from "react-device-detect";
+import FloatingSymbols from "./FloatingSymbols";
 
 function ProfilePage() {
   return (
     <div className="">
+      {/* Hero section */}
       <section
         id="about"
-        className="flex flex-col items-center justify-center h-[calc(100svh-50px)] "
+        className="flex flex-col items-center justify-center h-[calc(100svh-50px)] relative overflow-hidden"
       >
-        <section className="flex items-center md:flex-row flex-col gap-6 relative">
+        <FloatingSymbols />
+        <section className="flex items-center md:flex-row flex-col gap-6 relative z-10">
           <Image
             src={profilePic}
             alt="Profile pic"
@@ -102,7 +106,9 @@ function ProfilePage() {
           </section>
         </section>
       </section>
+
       <section className="flex flex-col items-center p-8 gap-24">
+        {/* Skills section */}
         <section
           id="skills"
           className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
@@ -127,6 +133,8 @@ function ProfilePage() {
           </span>
           <SkillSetCards />
         </section>
+
+        {/* Experience section */}
         <section
           id="experience"
           className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
@@ -150,6 +158,31 @@ function ProfilePage() {
             on any experience card to know more about it.
           </span>
           <ExperienceSection />
+        </section>
+
+        {/* Projects section */}
+        <section
+          id="projects"
+          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
+        >
+          <h4 className="text-lg text-center font-semibold custom-text-primary">
+            Featured Projects
+          </h4>
+          <span className="custom-text-secondary text-center text-md-1">
+            A selection of projects that demonstrate my technical skills and
+            problem-solving abilities
+          </span>
+          {/* <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+            <Lightbulb
+              size={16}
+              className="text-yellow-500 animate-pulse md:flex hidden"
+            />
+            <u>Tip:</u>{" "}
+            {isMobile
+              ? "Tap on links to view code or live demo"
+              : "Hover over cards for more details"}
+          </span> */}
+          <Projects />
         </section>
 
         <section className="pt-10 pb-20 lg:w-3/5 w-4/5 text-center">
