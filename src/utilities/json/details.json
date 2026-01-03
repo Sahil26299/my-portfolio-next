@@ -209,9 +209,12 @@
         "Next.js",
         "MongoDB",
         "TypeScript",
-        "Tailwind CSS"
+        "Tailwind CSS",
+        "LangChain",
+        "OpenAI"
       ],
-      "features": ["AI Agent", "WhatsApp Integration", "Task Management"]
+      "features": ["AI Agent", "WhatsApp Integration", "Task Management"],
+      "prompt": "Write a detailed summary on one of Sahil's personal projects, Task Manager. What was the project about? What kind of tools he worked upon? etc."
     },
     {
       "id": "ping",
@@ -223,7 +226,8 @@
         "github": "https://github.com/Sahil26299/ping"
       },
       "technologies": ["Next.js", "Socket.IO", "Node.js", "MongoDB"],
-      "features": ["Real-time messaging", "User management", "User Auth"]
+      "features": ["Real-time messaging", "User management", "User Auth"],
+      "prompt": "Write a detailed summary on one of Sahil's personal projects, Ping. What was the project about? What kind of tools he worked upon? etc."
     }
   ]
 }

@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Bot, RefreshCw, Send, X } from "lucide-react";
+import { Bot, Loader2, RefreshCw, Send, X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import style from "./ChatPopover.module.css";
 import {
@@ -256,6 +256,7 @@ const ChatPopover = ({
   );
   const [regenrateResponseChances, setRegenrateResponseChances] = useState(0);
   const [showFollowUpQuestions, setShowFollowUpQuestions] = useState(false);
+  const [initializingChats, setInitializingChats] = useState(false)
 
   // Scroll to bottom when new messages are added
   useEffect(() => {
@@ -318,15 +319,42 @@ const ChatPopover = ({
 
   useEffect(() => {
     if (openChatPopover && chatRecords?.length === 0) {
-      handleUpdateChatRecords([
-        {
-          message: `👋 Hi there! I’m your friendly AI assistant here to help you know more about Sahil’s work and experience as a Software developer. Ask me anything about his skills, projects, past experiences or professional journey!`,
-          isLoading: false,
-          isError: false,
-          user: "bot",
-          showUserMessageAnimation: false,
-        },
-      ]);
+      const fetchWelcomeMessage = async () => {
+        setInitializingChats(true);
+        try {
+          const res = await fetch("/api/chat/init");
+          const data = await res.json();
+          const welcomeMsg =
+            data.message ||
+            "👋 Hi there! Welcome to Sahil's portfolio. I'm here to help you explore his projects and skills. Ask me anything!";
+
+          handleUpdateChatRecords([
+            {
+              message: welcomeMsg,
+              isLoading: false,
+              isError: false,
+              user: "bot",
+              showUserMessageAnimation: false,
+            },
+          ]);
+        } catch (error) {
+          handleUpdateChatRecords([
+            {
+              message:
+                "👋 Hi there! Welcome to Sahil's portfolio. I'm here to help you explore his projects and skills. Ask me anything!",
+              isLoading: false,
+              isError: false,
+              user: "bot",
+              showUserMessageAnimation: false,
+            },
+          ]);
+        } finally {
+          setInitializingChats(false);
+        }
+      };
+
+      fetchWelcomeMessage();
+
       setStreamingIndex(0);
       setFollowUpQuestions([
         "What is Sahil’s total work experience with respect to his current and past employers?",
@@ -618,7 +646,13 @@ const ChatPopover = ({
           ref={setScrollRef}
           className={`flex flex-col h-full overflow-y-auto py-3 gap-1 custom-scrollbar`}
         >
-          {chatRecords?.map((record: chatRecords, index: number) => (
+          {initializingChats ? 
+          <div className="flex items-center gap-3 custom-text-secondary-converse text-sm italic font-semibold animate-pulse" >
+            <Loader2 size={16} className="animate-spin" />
+            Initializing Assistant...
+          </div>
+          :
+          chatRecords?.map((record: chatRecords, index: number) => (
             <MessageComponent
               key={index}
               index={index}

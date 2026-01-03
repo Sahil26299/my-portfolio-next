@@ -39,8 +39,8 @@ export default function Navbar() {
           <NavigationMenuTrigger className="text-content primary-background hover:bg-bg-secondary text-md-1">
             Profile
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-bg-secondary dark:bg-bg-secondary-dark custom-border-color">
-            <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0 ">
+          <NavigationMenuContent className="bg-bg-secondary dark:bg-bg-secondary-dark custom-border-color absolute top-full md:top-0 max-h-[calc(100vh-60px)] overflow-y-auto w-auto left-0">
+            <ul className="grid gap-2 w-[250px] md:w-[350px] lg:w-[500px] lg:grid-cols-[.75fr_1fr] p-0 ">
               <li className="row-span-3 lg:border-r lg:custom-border-color">
                 <NavigationMenuLink asChild>
                   <div className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md">

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const FloatingSymbols = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 select-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 select-none md:flex hidden">
       {/* React Fragment / Code Tag - Top Left */}
       <motion.div
         className="absolute top-12 left-10 text-4xl font-mono font-bold text-cyan-400/20"

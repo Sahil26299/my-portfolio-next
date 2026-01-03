@@ -9,7 +9,7 @@ import Projects from "../projects/Projects";
 import GradientButton from "../gradientButton/GradientButton";
 import dayjs from "dayjs";
 import { details } from "@/src/utilities";
-import { Lightbulb } from "lucide-react";
+import { Github, Lightbulb, Linkedin, Mail, Phone, X } from "lucide-react";
 import { isMobile } from "react-device-detect";
 import FloatingSymbols from "./FloatingSymbols";
 
@@ -41,7 +41,7 @@ function ProfilePage() {
             </span>
           </a>
           <section className="flex flex-col md:text-left md:items-start items-center text-center gap-2 px-3">
-            <section className="custom-text-secondary font-medium flex items-center gap-2 lg:text-md-1 sm:text-sm text-[11px] border-b border-light_grey max-w-fit">
+            <section className="custom-text-secondary font-medium flex items-center gap-4 sm:gap-2 lg:text-md-1 sm:text-sm text-[11px] border-none sm:border-b border-light_grey max-w-fit">
               <motion.a
                 target="_blank"
                 initial={{ opacity: 0, y: 3 }}
@@ -49,7 +49,8 @@ function ProfilePage() {
                 transition={{ duration: 0.3, delay: 0.2 }}
                 href={`mailto:${details.email}`}
               >
-                {details.email}
+                <span className="hidden sm:flex">{details.email}</span>
+                <Mail size={16} className="sm:hidden" />
               </motion.a>{" "}
               •{" "}
               <motion.a
@@ -59,7 +60,8 @@ function ProfilePage() {
                 transition={{ duration: 0.3, delay: 0.4 }}
                 href={`tel:${details.phone}`}
               >
-                {details.phone}
+                <span className="hidden sm:flex">{details.phone}</span>
+                <Phone size={16} className="sm:hidden" />
               </motion.a>{" "}
               •{" "}
               <motion.a
@@ -69,7 +71,8 @@ function ProfilePage() {
                 transition={{ duration: 0.3, delay: 0.6 }}
                 href={details.linkedin}
               >
-                LinkedIn
+                <span className="hidden sm:flex">LinkedIn</span>
+                <Linkedin size={16} className="sm:hidden" />
               </motion.a>{" "}
               •{" "}
               <motion.a
@@ -79,7 +82,8 @@ function ProfilePage() {
                 transition={{ duration: 0.3, delay: 0.8 }}
                 href={details.github}
               >
-                GitHub
+                <span className="hidden sm:flex">GitHub</span>
+                <Github size={16} className="sm:hidden" />
               </motion.a>{" "}
               •{" "}
               <motion.a
@@ -89,14 +93,15 @@ function ProfilePage() {
                 transition={{ duration: 0.3, delay: 1.0 }}
                 href={details.x}
               >
-                X
+                <span className="hidden sm:flex">X</span>
+                <X size={16} className="sm:hidden" />
               </motion.a>
             </section>
             <h2 className="lg:text-2xl sm:text-xl text-[36px] font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
               Sahil Lokhande
             </h2>
             <TypeWriterUI
-              botResponse="Frontend Developer Pioneering Interfaces with AI"
+              botResponse="Software Developer | 4 Years of Experience | Pune, India"
               delay={50}
               textClass="uppercase italic custom-text-secondary font-medium lg:text-md text-md-1"
             />
@@ -129,7 +134,7 @@ function ProfilePage() {
             {isMobile
               ? `Tap and hold (or R. Click while on PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
-            on any skill card to know more about it.
+            on any skill (card) to know more about it.
           </span>
           <SkillSetCards />
         </section>
@@ -155,7 +160,7 @@ function ProfilePage() {
             {isMobile
               ? `Tap and hold (or R. Click while on PC)`
               : `Right click (or tap and hold if using mobile)`}{" "}
-            on any experience card to know more about it.
+            on any experience (card) to know more about it.
           </span>
           <ExperienceSection />
         </section>
@@ -163,7 +168,7 @@ function ProfilePage() {
         {/* Projects section */}
         <section
           id="projects"
-          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
+          className="xl:w-3/5 w-4/5 flex flex-col items-center py-10"
         >
           <h4 className="text-lg text-center font-semibold custom-text-primary">
             Featured Projects
@@ -172,16 +177,17 @@ function ProfilePage() {
             A selection of projects that demonstrate my technical skills and
             problem-solving abilities
           </span>
-          {/* <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
             <Lightbulb
               size={16}
               className="text-yellow-500 animate-pulse md:flex hidden"
             />
             <u>Tip:</u>{" "}
             {isMobile
-              ? "Tap on links to view code or live demo"
-              : "Hover over cards for more details"}
-          </span> */}
+              ? `Tap and hold (or R. Click while on PC)`
+              : `Right click (or tap and hold if using mobile)`}{" "}
+            on any project (card) to know more about it.
+          </span>
           <Projects />
         </section>
 
