@@ -68,7 +68,6 @@ export default function Page() {
       });
       const jsonResponse = await response.json();
       // const parsedResponse = JSON.parse(response);
-      console.log(jsonResponse, "jsonResponse");
       if (jsonResponse?.status === 200 && jsonResponse?.data?.length === 0) {
       }
     } catch (error) {
