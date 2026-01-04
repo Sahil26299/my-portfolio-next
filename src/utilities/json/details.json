@@ -111,7 +111,7 @@
       "id": "current",
       "company": "Pyrack",
       "role": "Senior Frontend Developer",
-      "duration": "2 Years",
+      "duration": "2+ Years",
       "period": "Sept 2023 - Present",
       "location": "Pune, India",
       "prompt": "Write a detailed summary on Sahil's experience at Pyrack, kind of tools he worked on, experience he gained and for how long he's been working for Pyrack.",
@@ -139,6 +139,10 @@
       },
       "personalGrowth": {
         "skills": [
+          "AI/ML",
+          "AI Agents",
+          "Backend development",
+          "DevOps",
           "Team Leadership",
           "System Architecture",
           "Performance Optimization",

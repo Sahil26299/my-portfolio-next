@@ -101,7 +101,7 @@ export default function Projects() {
     >
       {projects.map((project: Project) => (
         <ContextMenu key={project.id}>
-          <ContextMenuTrigger className="xl:min-w-[450px] lg:min-w-[350px] md:min-w-[300px] sm:min-w-[240px] min-w-[160px] flex flex-col flex-1" >
+          <ContextMenuTrigger className="xl:min-w-[450px] lg:min-w-[350px] md:min-w-[300px] min-w-[240px] flex flex-col flex-1" >
             <motion.div
               variants={cardVariants}
               whileHover={{
@@ -143,7 +143,7 @@ export default function Projects() {
                   </div>
                   <a
                     href={project.links.live}
-                    className="block w-full sm:h-[200px] h-[120px] relative mb-3"
+                    className="block w-full sm:h-[200px] h-[160px] relative mb-3"
                   >
                     <Image
                       src={project?.image || ""}

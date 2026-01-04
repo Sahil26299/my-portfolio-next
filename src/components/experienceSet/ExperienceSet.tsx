@@ -240,10 +240,10 @@ export default function ExperienceSection() {
                             <Building2 className="w-5 h-5" />
                           </div>
                           <div>
-                            <CardTitle className="text-lg-1 font-bold custom-text-primary">
+                            <CardTitle className="md:text-lg-1 sm:text-md text-base font-bold custom-text-primary">
                               {exp.role}
                             </CardTitle>
-                            <p className="text-md font-semibold text-blue-600 dark:text-blue-400">
+                            <p className="md:text-md sm:text-md-1 text-sm font-semibold text-blue-600 dark:text-blue-400">
                               {exp.company}
                             </p>
                           </div>
@@ -251,56 +251,56 @@ export default function ExperienceSection() {
                         <div className="flex flex-wrap gap-2">
                           <Badge
                             variant="outline"
-                            className="text-xs custom-border-color"
+                            className="sm:text-xs text-[11px] custom-border-color custom-text-secondary"
                           >
                             <Calendar className="w-3 h-3 mr-1" />
                             {exp.period}
                           </Badge>
                           <Badge
                             variant="secondary"
-                            className="text-xs bg-dark_grey/10 dark:bg-dark_grey/20"
+                            className="sm:text-xs text-[11px] bg-dark_grey/10 dark:bg-dark_grey/20"
                           >
                             {exp.companyType}
                           </Badge>
                         </div>
                       </div>
-                      <CardDescription className="custom-text-secondary text-base">
+                      <CardDescription className="custom-text-secondary md:text-base sm:text-md-1 text-sm">
                         {exp.description}
                       </CardDescription>
                     </CardHeader>
 
                     <CardContent className="space-y-6">
                       {/* Key Stats */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                      <div className="grid  grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
                         <div className="text-center">
-                          <p className="lg:text-lg md:text-lg-1 text-md font-bold text-blue-600 dark:text-blue-400">
+                          <p className="lg:text-lg md:text-lg-1 sm:text-md text-base font-bold text-blue-600 dark:text-blue-400">
                             {exp.duration}
                           </p>
-                          <p className="text-xs custom-text-secondary">
+                          <p className="sm:text-xs text-[11px] custom-text-secondary">
                             Duration
                           </p>
                         </div>
                         <div className="text-center">
-                          <p className="lg:text-lg md:text-lg-1 text-md font-bold text-green-600 dark:text-green-400">
+                          <p className="lg:text-lg md:text-lg-1 sm:text-md text-base font-bold text-green-600 dark:text-green-400">
                             {exp.projects}
                           </p>
-                          <p className="text-xs custom-text-secondary">
+                          <p className="sm:text-xs text-[11px] custom-text-secondary">
                             Projects
                           </p>
                         </div>
                         <div className="text-center">
-                          <p className="lg:text-lg md:text-lg-1 text-md font-bold text-purple-600 dark:text-purple-400">
+                          <p className="lg:text-lg md:text-lg-1 sm:text-md text-base font-bold text-purple-600 dark:text-purple-400">
                             {exp.teamSize}
                           </p>
-                          <p className="text-xs custom-text-secondary">
+                          <p className="sm:text-xs text-[11px] custom-text-secondary">
                             Team Size
                           </p>
                         </div>
                         <div className="text-center">
-                          <p className="lg:text-lg md:text-lg-1 text-md font-bold text-orange-600 dark:text-orange-400">
+                          <p className="lg:text-lg md:text-lg-1 sm:text-md text-base font-bold text-orange-600 dark:text-orange-400">
                             {exp.location}
                           </p>
-                          <p className="text-xs custom-text-secondary">
+                          <p className="sm:text-xs text-[11px] custom-text-secondary">
                             Location
                           </p>
                         </div>
@@ -336,7 +336,7 @@ export default function ExperienceSection() {
                             <Badge
                               key={tech}
                               variant="outline"
-                              className="text-xs custom-border-color"
+                              className="sm:text-xs text-[11px] custom-border-color"
                             >
                               {tech}
                             </Badge>
@@ -364,14 +364,14 @@ export default function ExperienceSection() {
                             Company Impact
                           </h4>
                           <div className="flex items-center space-x-2 mb-2">
-                            <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                            <span className="lg:text-lg md:text-lg-1 sm:text-md text-base font-bold text-green-600 dark:text-green-400">
                               {exp.companyImpact.improvement}
                             </span>
                             <span className="text-sm text-green-600 dark:text-green-400">
                               {exp.companyImpact.metric}
                             </span>
                           </div>
-                          <p className="text-xs text-green-700 dark:text-green-300">
+                          <p className="sm:text-xs text-[11px] text-green-700 dark:text-green-300">
                             {exp.companyImpact.description}
                           </p>
                         </div>
@@ -384,7 +384,7 @@ export default function ExperienceSection() {
                           </h4>
                           <div className="space-y-2">
                             <div>
-                              <p className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                              <p className="sm:text-xs text-[11px] font-medium text-purple-600 dark:text-purple-400">
                                 Skills Gained:
                               </p>
                               <div className="flex flex-wrap gap-1 mt-1">
@@ -392,14 +392,14 @@ export default function ExperienceSection() {
                                   <Badge
                                     key={skill}
                                     variant="outline"
-                                    className="text-xs bg-purple-100 dark:bg-purple custom-border-color"
+                                    className="sm:text-xs text-[11px] bg-purple-100 dark:bg-purple custom-border-color"
                                   >
                                     {skill}
                                   </Badge>
                                 ))}
                               </div>
                             </div>
-                            <p className="text-xs text-purple-700 dark:text-purple-300">
+                            <p className="sm:text-xs text-[11px] text-purple-700 dark:text-purple-300">
                               {exp.personalGrowth.challenges}
                             </p>
                           </div>
