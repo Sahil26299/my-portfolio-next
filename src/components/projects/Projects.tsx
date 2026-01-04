@@ -97,26 +97,26 @@ export default function Projects() {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      className="flex flex-wrap items-center justify-evenly gap-6 w-full mt-8"
+      className="flex flex-wrap items-center justify-center lg:gap-6 md:gap-4 gap-2 w-full mt-8 "
     >
       {projects.map((project: Project) => (
         <ContextMenu key={project.id}>
-          <ContextMenuTrigger>
+          <ContextMenuTrigger className="xl:min-w-[450px] lg:min-w-[350px] md:min-w-[300px] sm:min-w-[240px] min-w-[160px] flex flex-col flex-1" >
             <motion.div
               variants={cardVariants}
               whileHover={{
                 scale: 1.02,
                 transition: { duration: 0.2 },
               }}
-              className="flex xl:w-[450px] lg:w-[400px] md:w-[450px] w-[320px] h-[620px] min-w-[320px]"
+              className="flex w-full h-full"
             >
               <Card className="flex flex-col w-full h-full secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
-                <CardHeader>
+                <CardHeader className="sm:pb-4 pb-0 sm:px-6 px-3" >
                   <div className="flex justify-between items-start w-full">
                     <div className="p-2 bg-purple text-white rounded-lg mb-4">
-                      <Code2 className="lg:w-6 lg:h-6 w-5 h-5" />
+                      <Code2 className="lg:w-6 lg:h-6 sm:w-5 sm:h-5 w-4 h-4" />
                     </div>
-                    <div className="flex lg:gap-3 gap-4">
+                    <div className="flex lg:gap-3 sm:gap-4 gap-2">
                       {project.links.github && (
                         <a
                           href={project.links.github}
@@ -143,7 +143,7 @@ export default function Projects() {
                   </div>
                   <a
                     href={project.links.live}
-                    className="block w-full h-[200px] relative mb-3"
+                    className="block w-full sm:h-[200px] h-[120px] relative mb-3"
                   >
                     <Image
                       src={project?.image || ""}
@@ -153,20 +153,39 @@ export default function Projects() {
                       className="h-full w-full object-cover object-top rounded-lg border border-slate-800 mx-auto "
                     />
                   </a>
-                  <CardTitle className="text-lg-1 font-bold custom-text-primary mt-3">
+                  <CardTitle className="lg:text-lg-1 md:text-md text-md-1 font-bold custom-text-primary mt-3">
                     {project.title}
                   </CardTitle>
-                  <CardDescription className="custom-text-secondary line-clamp-3">
+                  <CardDescription className="custom-text-secondary sm:text-md-1 text-xs sm:line-clamp-3 line-clamp-2">
                     {project.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex-grow space-y-4">
+                <CardContent className="flex-grow space-y-4 sm:pb-4 pb-0 sm:px-6 px-3">
                   <div className="space-y-2">
                     <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                       <Layers className="w-3 h-3" /> Tech Stack
                     </h4>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex-wrap gap-2 sm:flex hidden">
                       {project.technologies.slice(0, 4).map((tech) => (
+                        <Badge
+                          key={tech}
+                          variant="secondary"
+                          className="text-xs bg-blue/10 text-blue font-medium dark:bg-blue/20 dark:text-blue-300"
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                      {project.technologies.length > 4 && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs custom-border-color"
+                        >
+                          +{project.technologies.length - 4}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="sm:hidden flex flex-wrap gap-1">
+                      {project.technologies.slice(0, 2).map((tech) => (
                         <Badge
                           key={tech}
                           variant="secondary"

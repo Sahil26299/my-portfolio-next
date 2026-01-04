@@ -75,21 +75,21 @@ const getProficiencyLabel = (proficiency: number) => {
 
 const getSkillIcon = (skill: string) => {
   if (skill === "reactnative") {
-    return <TabletSmartphone className="w-6 h-6" />;
+    return <TabletSmartphone className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "tailwind") {
-    return <Palette className="w-6 h-6" />;
+    return <Palette className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "nodejs") {
-    return <Database className="w-6 h-6" />;
+    return <Database className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "git") {
-    return <Github className="w-6 h-6" />;
+    return <Github className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "docker") {
-    return <Container className="w-6 h-6" />;
+    return <Container className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "collaboration") {
-    return <Users className="w-6 h-6" />;
+    return <Users className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else if (skill === "nextjs") {
-    return <Zap className="w-6 h-6 " />;
+    return <Zap className="sm:w-6 sm:h-6 w-4 h-4" />;
   } else {
-    return <Code className="w-6 h-6" />;
+    return <Code className="sm:w-6 sm:h-6 w-4 h-4" />;
   }
 };
 
@@ -125,7 +125,7 @@ export default function SkillSetCards() {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-[240px] mt-8"
+      className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 md:gap-6 sm:gap-4 gap-2 w-full md:mt-8 sm:mt-6 mt-4"
     >
       {details.skills.map((skill) => (
         <ContextMenu key={skill.id}>
@@ -136,31 +136,40 @@ export default function SkillSetCards() {
                 scale: 1.02,
                 transition: { duration: 0.2 },
               }}
-              className="select-none"
+              className="select-none h-full"
               whileTap={{ scale: 0.98 }}
             >
-              <Card className="h-full lg:min-w-[200px] min-w-[240px] secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
-                <CardHeader className="pb-4">
+              <Card className="h-full lg:min-w-[200px] sm:min-w-[240px] min-w-[120px] secondary-background backdrop-blur-sm custom-border-color border hover:shadow-lg transition-shadow duration-300">
+                <CardHeader className="sm:pb-4 pb-0 sm:px-6 px-3">
                   <div className="flex items-center justify-between mb-2">
-                    <div className={`p-2 rounded-lg ${skill.color} text-white`}>
+                    <div
+                      className={`p-2 rounded-lg ${skill.color} text-white sm:flex hidden`}
+                    >
                       {getSkillIcon(skill.id)}
                     </div>
-                    <Badge variant="secondary" className="text-xs">
+                    <CardTitle className={`text-[14px] font-bold custom-text-primary sm:hidden flex items-center gap-2`}>
+                      {getSkillIcon(skill.id)}
+                      {skill.name}
+                    </CardTitle>
+                    <Badge
+                      variant="secondary"
+                      className="text-xs custom-text-secondary sm:flex hidden"
+                    >
                       {skill.category}
                     </Badge>
                   </div>
-                  <CardTitle className="text-lg-1 font-bold custom-text-primary">
+                  <CardTitle className="text-lg-1 font-bold custom-text-primary sm:flex hidden">
                     {skill.name}
                   </CardTitle>
-                  <CardDescription className="custom-text-secondary">
+                  <CardDescription className="custom-text-secondary sm:line-clamp-6 line-clamp-2">
                     {skill.description}
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
+                <CardContent className="sm:space-y-4 space-y-2 sm:px-6 px-3">
                   {/* Proficiency Section */}
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between">
+                    <div className="hidden sm:flex items-center justify-between">
                       <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                         Proficiency
                       </span>
@@ -172,7 +181,7 @@ export default function SkillSetCards() {
                         {getProficiencyLabel(skill.proficiency)}
                       </span>
                     </div>
-                    <div className="relative">
+                    <div className="relative sm:block hidden">
                       <Progress value={skill.proficiency} className="h-2" />
                       <motion.div
                         initial={{ width: 0 }}
@@ -185,7 +194,11 @@ export default function SkillSetCards() {
                         className="absolute top-0 left-0 h-2 bg-gradient-to-r from-blue to-purple rounded-full"
                       />
                     </div>
-                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                    <span
+                      className={`text-xs sm:text-slate-500 sm:dark:text-slate-400 ${getProficiencyColor(
+                        skill.proficiency
+                      )}`}
+                    >
                       {skill.proficiency}% proficiency
                     </span>
                   </div>
@@ -193,7 +206,7 @@ export default function SkillSetCards() {
                   {/* Experience & Projects */}
                   <div className="grid grid-cols-2 gap-4 pt-2">
                     <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-slate-500" />
+                      <Calendar className="w-4 h-4 text-slate-500 sm:flex hidden" />
                       <div>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                           Experience
@@ -204,7 +217,7 @@ export default function SkillSetCards() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Code className="w-4 h-4 text-slate-500" />
+                      <Code className="w-4 h-4 text-slate-500 sm:flex hidden" />
                       <div>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                           Projects
@@ -225,7 +238,8 @@ export default function SkillSetCards() {
               disabled={disablePrompts}
               className="custom-text-primary-converse hover:bg-dark_grey/10 dark:hover:border-dark_grey/20 hover:underline cursor-pointer md:w-full w-[240px]"
             >
-              <Quote size={16} className="text-purple" /> Ask more about {skill.name}({skill.category}) to assistant?{" "}
+              <Quote size={16} className="text-purple" /> Ask more about{" "}
+              {skill.name}({skill.category}) to assistant?{" "}
               {disablePrompts ? "Sorry your limit reached!" : ""}
             </ContextMenuItem>
           </ContextMenuContent>

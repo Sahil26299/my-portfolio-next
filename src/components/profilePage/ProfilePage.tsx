@@ -97,7 +97,7 @@ function ProfilePage() {
                 <X size={16} className="sm:hidden" />
               </motion.a>
             </section>
-            <h2 className="lg:text-2xl sm:text-xl text-[36px] font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
+            <h2 className="lg:text-2xl md:text-xl sm:text-xl text-[36px] font-bold bg-gradient-to-r from-blue to-purple bg-clip-text text-transparent">
               Sahil Lokhande
             </h2>
             <TypeWriterUI
@@ -116,16 +116,16 @@ function ProfilePage() {
         {/* Skills section */}
         <section
           id="skills"
-          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
+          className="lg:w-3/5 sm:w-4/5 w-[95%] flex flex-col items-center py-10"
         >
-          <h4 className="text-lg font-semibold custom-text-primary text-center">
+          <h4 className="md:text-lg text-lg-1 font-semibold custom-text-primary text-center">
             My Skills & Expertise
           </h4>
-          <span className="custom-text-secondary text-center text-md-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm">
             A comprehensive overview of my technical skills, proficiency levels,
             and hands-on experience
           </span>
-          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm flex gap-1">
             <Lightbulb
               size={16}
               className="text-yellow-500 animate-pulse md:flex hidden"
@@ -142,16 +142,16 @@ function ProfilePage() {
         {/* Experience section */}
         <section
           id="experience"
-          className="lg:w-3/5 w-4/5 flex flex-col items-center py-10"
+          className="lg:w-3/5 sm:w-4/5 w-[95%] flex flex-col items-center py-10"
         >
-          <h4 className="text-lg text-center font-semibold custom-text-primary">
+          <h4 className="md:text-lg text-lg-1 font-semibold custom-text-primary text-center">
             Professional Experience
           </h4>
-          <span className="custom-text-secondary text-center text-md-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm">
             My journey through different companies, the impact I´ve made, and
             how each experience has shaped my professional growth
           </span>
-          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm flex gap-1">
             <Lightbulb
               size={16}
               className="text-yellow-500 animate-pulse md:flex hidden"
@@ -168,16 +168,16 @@ function ProfilePage() {
         {/* Projects section */}
         <section
           id="projects"
-          className="xl:w-3/5 w-4/5 flex flex-col items-center py-10"
+          className="lg:w-3/5 sm:w-4/5 w-[95%] flex flex-col items-center py-10"
         >
-          <h4 className="text-lg text-center font-semibold custom-text-primary">
+          <h4 className="md:text-lg text-lg-1 font-semibold custom-text-primary text-center">
             Featured Projects
           </h4>
-          <span className="custom-text-secondary text-center text-md-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm">
             A selection of projects that demonstrate my technical skills and
             problem-solving abilities
           </span>
-          <span className="custom-text-secondary text-center text-md-1 flex gap-1">
+          <span className="custom-text-secondary text-center md:text-md-1 text-sm flex gap-1">
             <Lightbulb
               size={16}
               className="text-yellow-500 animate-pulse md:flex hidden"
