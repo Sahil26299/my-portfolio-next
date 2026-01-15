@@ -101,7 +101,7 @@ export default function Projects() {
     >
       {projects.map((project: Project) => (
         <ContextMenu key={project.id}>
-          <ContextMenuTrigger className="xl:min-w-[450px] lg:min-w-[350px] md:min-w-[300px] min-w-[240px] flex flex-col flex-1" >
+          <ContextMenuTrigger className="xl:min-w-[400px] lg:min-w-[320px] md:min-w-[260px] min-w-[220px] flex flex-col flex-1" >
             <motion.div
               variants={cardVariants}
               whileHover={{
