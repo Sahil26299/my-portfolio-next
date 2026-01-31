@@ -12,6 +12,7 @@ import {
   User,
   Twitter,
   X,
+  Newspaper,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { details } from "@/src/utilities";
@@ -66,6 +67,11 @@ const navigationLinks = [
     icon: <Briefcase className="w-4 h-4" />,
     href: "#experience",
   },
+  {
+    name: "Blogs",
+    icon: <Newspaper className="w-4 h-4" />,
+    href: "/blogs",
+  },
 ];
 
 export default function Footer() {
@@ -117,23 +123,37 @@ export default function Footer() {
           >
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
             <nav className="space-y-2">
-              {navigationLinks.map((link) => (
-                <motion.button
-                  key={link.name}
-                  onClick={() =>
-                    link.name === "About"
-                      ? scrollToTop()
-                      : scrollToSection(link.href)
-                  }
-                  whileHover={{ x: 5 }}
-                  className="flex items-center space-x-2 text-slate-300 hover:text-white transition-colors duration-200 group"
-                >
-                  <span className="group-hover:text-blue-400 transition-colors duration-200">
-                    {link.icon}
-                  </span>
-                  <span>{link.name}</span>
-                </motion.button>
-              ))}
+              {navigationLinks.map((link) =>
+                link.href?.startsWith("/") ? (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center space-x-2 text-slate-300 hover:text-white transition-colors duration-200 group"
+                  >
+                    <span className="group-hover:text-blue-400 transition-colors duration-200">
+                      {link.icon}
+                    </span>
+                    <span>{link.name}</span>
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    key={link.name}
+                    onClick={() =>
+                      link.name === "About"
+                        ? scrollToTop()
+                        : scrollToSection(link.href)
+                    }
+                    whileHover={{ x: 5 }}
+                    className="cursor-pointer flex items-center space-x-2 text-slate-300 hover:text-white transition-colors duration-200 group"
+                  >
+                    <span className="group-hover:text-blue-400 transition-colors duration-200">
+                      {link.icon}
+                    </span>
+                    <span>{link.name}</span>
+                  </motion.button>
+                )
+              )}
             </nav>
           </motion.div>
 

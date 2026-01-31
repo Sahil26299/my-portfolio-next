@@ -103,7 +103,7 @@ export default function Page() {
   }
 
   return (
-    <ThemeProvider attribute={"class"} defaultTheme="dark">
+    // <ThemeProvider attribute={"class"} defaultTheme="dark">
       <SidebarProvider className="primary-background" open={openSideBar}>
         <main className="w-full">
           <section className="relative">
@@ -123,6 +123,6 @@ export default function Page() {
           <Footer />
         </main>
       </SidebarProvider>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 import { Download, Moon, Sun } from "lucide-react";
 import {
   NavigationMenu,
@@ -32,7 +33,7 @@ export default function Navbar() {
   return (
     <NavigationMenu
       viewport={false}
-      className="primary-background w-full max-w-full justify-between h-[50px] px-4 shadow dark:border-b dark:border-bg-secondary-dark sticky top-0 z-20"
+      className="primary-background w-full max-w-full justify-between max-h-[50px] px-4 shadow dark:border-b dark:border-bg-secondary-dark sticky top-0 z-20"
     >
       <NavigationMenuList>
         <NavigationMenuItem>
@@ -60,7 +61,7 @@ export default function Navbar() {
                         className="h-5 w-5"
                         download={true}
                         target="_blank"
-                        href={`${location.href}files/sahilLokhandeCV.pdf`}
+                        href={`${location?.href}files/sahilLokhandeCV.pdf`}
                       >
                         <Download size={16} />
                       </a>
@@ -88,6 +89,14 @@ export default function Navbar() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        {/* <NavigationMenuItem>
+          <NavigationMenuLink
+            href="/blogs"
+            className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-md-1 font-medium transition-colors hover:bg-bg-secondary focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 text-content primary-background"
+          >
+            Blogs
+          </NavigationMenuLink>
+        </NavigationMenuItem> */}
       </NavigationMenuList>
       <ThemeToggleButton />
     </NavigationMenu>

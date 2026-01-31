@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { poppins } from "@/src/utilities";
+import { ThemeProvider } from "@/src/components/hoc/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Portfolio | Sahil Lokhande",
@@ -39,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className}`}>{children}</body>
+      <body className={`${poppins.className}`}><ThemeProvider attribute={"class"} defaultTheme="dark">{children}</ThemeProvider></body>
     </html>
   );
 }
